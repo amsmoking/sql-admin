@@ -1,0 +1,75 @@
+[inception]
+port=9011
+socket=/tmp/inc.socket
+inception_check_insert_field=1
+inception_check_dml_where=1
+inception_check_dml_limit=1
+inception_check_dml_orderby=1
+inception_enable_select_star=0
+inception_enable_orderby_rand=1
+inception_enable_nullable=1
+inception_enable_foreign_key=0
+inception_max_key_parts=5
+inception_max_update_rows=10000000
+inception_max_keys=16
+inception_enable_not_innodb=0
+inception_support_charset=utf8mb4,utf8
+inception_check_table_comment=1
+inception_check_column_comment=1
+inception_check_primary_key=1
+inception_enable_partition_table=0
+inception_enable_enum_set_bit=0
+inception_check_index_prefix=0
+inception_enable_autoincrement_unsigned=1
+inception_max_char_length=16
+inception_check_autoincrement_init_value=1
+inception_check_autoincrement_datatype=1
+inception_check_timestamp_default=0
+inception_enable_column_charset=0
+inception_check_autoincrement_name=1
+inception_merge_alter_table=1
+inception_check_column_default_value=0
+inception_enable_blob_type=1
+inception_enable_identifer_keyword=1
+general_log=1
+general_log_file=/var/log/sql-admin/inception.log
+inception_enable_sql_statistic=1
+inception_read_only=0
+inception_check_identifier=0
+
+#osc option default value
+#inception_osc_check_interval=5
+#inception_osc_chunk_size=1000
+#inception_osc_chunk_size_limit=4
+#inception_osc_chunk_time=1
+#inception_osc_critical_thread_connected=1000
+#inception_osc_critical_thread_running=80
+#inception_osc_drop_new_table=1
+#inception_osc_drop_old_table=1
+inception_osc_check_replication_filters=0
+#inception_osc_check_alter=1
+#inception_osc_max_lag=3
+#inception_osc_max_thread_connected=1000
+#inception_osc_max_thread_running=80
+#inception_osc_recursion_method=processlist
+#inception_osc_alter_foreign_keys_method=none
+#
+#inception_osc_bin_dir=/usr/bin
+#inception_osc_min_table_size=0
+#inception_osc_on=1
+#inception_osc_print_sql=1
+#inception_osc_print_none=1
+
+#backup
+inception_remote_backup_host=10.10.1.28
+inception_remote_backup_port=3306
+inception_remote_system_user=inc_user
+inception_remote_system_password=F29be)PMJi}LgThx
+
+#osc
+inception_osc_critical_thread_connected = 2000
+inception_osc_max_thread_connected = 2000
+inception_osc_min_table_size = 200
+inception_osc_print_none = 0
+inception_osc_critical_thread_running = 200
+inception_osc_max_thread_running = 200

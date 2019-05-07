@@ -1,0 +1,14 @@
+sqlparse==0.2.4
+demjson==2.2.4
+python-decouple==3.1
+rpyc==4.0.1
+xlwt==1.3.0
+crontab==0.22.2
+agileutil==12.38
+chardet==3.0.4
+MySQL-python==1.2.5
+croniter==0.3.23
+requests==2.19.1
+zmq==0.0.0
+pandas==0.23.1
+python-ldap==3.1.0

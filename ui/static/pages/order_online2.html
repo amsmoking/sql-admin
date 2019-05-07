@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">上线
+                    </h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+                            注意：上线前还会进行一次检查
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form class="layui-form" action="" id="form_id">
+                                            <div class="layui-form-item layui-form-text">
+                                           
+                                                    <label class="control-label">MySQL服务器</label>
+                                                    
+                                                </div>
+                                        <div class="layui-form-item layui-form-text">
+                                                <select id="mysql_server_select" name="server_id">
+                                                        <option value="">{{data.row.sel_ip}}</option>
+    
+                                                    </select>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                           
+                                                <label class="control-label">端口实例</label>
+                                                
+                                            </div>
+                                        <div class="layui-form-item layui-form-text">
+                                                <select id="mysql_server_select" name="server_id">
+                                                        <option value="">{{data.row.sel_port}}</option>
+    
+                                                    </select>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                           
+                                                <label class="control-label">数据库</label>
+                                                
+                                            </div>
+                                        <div class="layui-form-item layui-form-text">
+                                                <select id="mysql_server_select" name="server_id">
+                                                        <option value="">{{data.row.sel_db_name}}</option>
+                                                    </select>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                           
+                                                <label class="control-label">SQL语句</label>
+                                                
+                                            </div>
+                                        <div class="layui-form-item layui-form-text">
+                                                <textarea lay-verify="required" rows="10" placeholder="请输入sql语句" class="layui-textarea" name="sql" id="text_id_sql" lay-filter="text_f_sql"
+                                                disabled>{{data.row.sql}}</textarea>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                           
+                                                <label class="control-label">inception检查结果</label>
+                                                
+                                            </div>
+
+                                        <div class="layui-form-item layui-form-text">
+                                                <textarea rows="10" class="layui-textarea" name="combi_info" id="text_id_combi_info" lay-filter="text_f_combi_info"
+                                                disabled>{{data.row.combi_info}}</textarea>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit lay-filter="commit" id="commit_btn">上线</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!--</form>-->
+                                <div class="col-lg-6">
+                                        <div class="layui-form-item layui-form-text">
+                                           
+                                                <label class="control-label">语法检查</label>
+                                                
+                                            </div>
+                                    <div class="layui-form-item layui-form-text">
+                                            <textarea rows="37" class="layui-textarea" name="sql" id="text_id_error_warn_display" lay-filter="text_f_error_warn_display"
+                                            disabled></textarea>
+                                    </div>
+                                    <!--
+                                    <div class="layui-form-item layui-form-text">
+                                            <label class="control-label">优化建议</label>
+                                        </div>
+                                    <div class="layui-form-item layui-form-text">
+                                            <textarea rows="16" class="layui-textarea" name="sql" id="text_id_sql" lay-filter="text_f_sql" disabled></textarea>
+                                    </div>
+                                    -->
+                                </div>
+                                <!-- /.col-lg-6 (nested) -->
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery/jquery.validate.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+
+    <script src="../vendor/layui/layui.js"></script>
+    <script src="../vendor/addel/addel.jquery.js"></script>
+
+    <script type="text/javascript">
+        layui.use(['form', 'element', 'jquery', 'layer'], function () {
+            var form = layui.form;
+            var $ = jQuery = layui.jquery;
+            var layer = layui.layer;
+            //监听提交
+            form.on('submit(commit)', function (data) {
+                $("#commit_btn").attr('disabled', true);
+                layer.load();
+                $("#text_id_error_warn_display").val("");
+                $.ajax({
+                    url: '/sql_order/execute?id={{data.row.id}}',
+                    type: 'POST',
+                    async: true,
+                    error: function (resp) {
+                        layer.closeAll('loading');
+                        console.log(resp);
+                        $("#commit_btn").attr('disabled', false);
+                        layer.msg(resp, { time: 2000, icon: 2 });
+                    },
+                    success: function (resp) {
+                        layer.closeAll('loading');
+                        resp = $.parseJSON(resp);
+                        console.log(resp);
+                        //错误码：
+                        //0.没有警告，没有错误，审核通过，提交到后台中
+                        //1.执行sql检查发生了异常，mysql连接不上等原因，用户名密码不对等
+                        //2.有警告，无错误
+                        //3.无警告，有错误
+                        //4.有警告，有错误
+                        if (resp.errno == 0) {
+                            //审核成功了，跳转
+                            layer.msg("上线成功", { time: 2000, icon: 1 }, function () {
+                                window.location.href = '/sql_order/index';
+                            });
+                        } else if (resp.errno == 1) {
+                            //sql审核后端抛异常了
+                            console.log(resp.errmsg)
+                            layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                        } else if (resp.errno == 2) {
+                            //有警告，无错误
+                            $("#text_id_error_warn_display").val(resp.data.warning);
+                        } else if (resp.errno == 3) {
+                            //无警告，有错误
+                            $("#text_id_error_warn_display").val(resp.data.error);
+                        } else if (resp.errno == 4) {
+                            //有警告，有错误
+                            //这种情况只显示错误，用户先修正错误
+                            $("#text_id_error_warn_display").val(resp.data.error);
+                        } else if (resp.errno == 5) {
+                            //影响行数太多，稍后查看
+                            layer.msg(resp.errmsg, { time: 4000, icon: 1 }, function () {
+                                window.location.href = '/sql_order/index';
+                            });
+                        } else if (resp.errno == 6) {
+                            //执行出错了
+                            $("#text_id_error_warn_display").val(resp.errmsg);
+                        } else if (resp.errno == 8) {
+                            layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                        } else {
+                            //未知错误
+                            layer.msg("未知错误", { time: 2000, icon: 2 });
+                        }
+                        $("#commit_btn").attr('disabled', false);
+                        form.render('select');
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

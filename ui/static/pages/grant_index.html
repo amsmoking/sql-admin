@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../vendor/form_select/dist/formSelects-v4.css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">授权申请
+                    </h3>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+                            请填写授权申请单 (提交申请后，需等待SRE审核)
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form class="layui-form" action="" id="form_id">
+                                        <input type="hidden" name="sel_ip" id="sel_ip">
+                                        <input type="hidden" name="sel_port" id="sel_port">
+                                        <input type="hidden" name="sel_db_name" id="sel_db_name">
+                                        <input type="hidden" name="order_id" value="">
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="control-label">申请原因</label>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <textarea lay-verify="required" placeholder="请填写申请授权的原因" class="layui-textarea" name="reason" id="reason"></textarea>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">MySQL</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <select id="mysql_server_select" name="server_id" lay-verify="required" lay-filter="server_id" id="server_id" lay-search>
+                                                <option value=""></option>
+                                                {% for server in data.mysql_server_list %}
+                                                <option value="{{server.id}}">{{server.ip}}/{{server.remark}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">端口实例</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <select name="ins_id" lay-verify="required" lay-search id="ins_id" lay-filter="ins_id">
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">库名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <select name="ins_db_id" lay-verify="required" lay-search id="ins_db_id" lay-filter="ins_db_id">
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">权限</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <!-- 1只读，2读写，3所有，4自定义-->
+                                            <input type="radio" name="privilege" value="1" title="只读" checked lay-filter="privilege">
+                                            <input type="radio" name="privilege" value="2" title="读写" lay-filter="privilege">
+                                            <input type="radio" name="privilege" value="3" title="所有" lay-filter="privilege">
+                                            <input type="radio" name="privilege" value="4" title="自定义" lay-filter="privilege">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <select name="priv_list" xm-select="priv_list" lay-verify="required" id="priv_list" xm-select-search="" xm-select-placeholder="请选择"
+                                                xm-select-type="1">
+                                                {%for lower in data.all_lower_priv_list %}
+                                                <option value="{{lower}}">{{lower}}</option>
+                                                {%endfor%}
+                                            </select>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="control-label">授权账号</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="radio" name="pass_type" value="1" title="系统生成" lay-filter="pass_type" checked>
+                                            <input type="radio" name="pass_type" value="2" title="自定义账号、密码" lay-filter="pass_type">
+                                        </div>
+                                        <div class="layui-form-item" id="spec_div" style="display:none">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">账号</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="tel" name="spec_user" autocomplete="off" class="layui-input" lay-filter="spec_user" id="spec_user">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">密码</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="spec_pass" autocomplete="off" class="layui-input" lay-filter="spec_pass" id="spec_pass">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="layui-form-item">
+                                            <label class="control-label">授权的节点</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <!-- node_type:1 rolling节点， 2,10.10 10.11网段， 3自定义 -->
+                                            <input type="radio" name="node_type" value="1" title="10.10/10.11网段" lay-filter="node_type" checked>
+                                            <input type="radio" name="node_type" value="2" title="rolling节点" lay-filter="node_type">
+                                            <input type="radio" name="node_type" value="3" title="自定义节点" lay-filter="node_type">
+                                        </div>
+                                        <div class="layui-form-item" id="rolling_label_div">
+                                            <label class="control-label" id="roll_service_label">请选择rolling服务</label>
+                                        </div>
+                                        <div class="layui-form-item" id="rolling_select_div">
+                                            <select name="roll_service_name" lay-search id="roll_service_name" lay-filter="roll_service_name">
+                                                <option value="">请选择rolling中的服务</option>
+                                                {%for service_name in data.roll_service_list%}
+                                                <option value="{{service_name}}">{{service_name}}</option>
+                                                {%endfor%}
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <textarea name="ips" id="ips" lay-filter="ips" lay-verify="required" placeholder="请填写ip或网段，每行一个" class="layui-textarea"></textarea>
+                                        </div>
+
+                                        <div class="layui-form-item" align="left">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit lay-filter="commit" id="commit_btn">提交</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-6">
+                                </div>
+                                <!-- /.col-lg-6 (nested) -->
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery/jquery.validate.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+
+    <script src="../vendor/layui/layui.js"></script>
+    <script src="../vendor/addel/addel.jquery.js"></script>
+    <!--
+    <script src="../vendor/form_select/dist/formSelects-v4.min.js" type="text/javascript" charset="utf-8"></script>
+    -->
+
+    <script type="text/javascript">
+
+        //全局定义一次, 加载formSelects
+        layui.config({
+            base: '../vendor/form_select/dist/' //此处路径请自行处理, 可以使用绝对路径
+        }).extend({
+            formSelects: 'formSelects-v4'
+        });
+
+        layui.use(['form', 'element', 'jquery', 'layer', 'upload', 'formSelects'], function () {
+            var form = layui.form;
+            var $ = jQuery = layui.jquery;
+            var layer = layui.layer;
+            var upload = layui.upload;
+            var formSelects = layui.formSelects;
+
+            //第一次加载
+            formSelects.render('priv_list');
+            formSelects.disabled('priv_list');
+            priv_list = get_mysql_priv_list(1);
+            formSelects.value('priv_list', priv_list);
+
+            $("#rolling_label_div").hide();
+            $("#rolling_select_div").hide();
+            $("#ips").attr('readonly', 'readonly');
+            $("#ips").val('10.10.%\n10.11.%')
+
+            self_define_priv = [];
+
+            function removeByValue(arr, val) {
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i] == val) {
+                        arr.splice(i, 1);
+                        break;
+                    }
+                }
+            };
+
+            form.on('select(roll_service_name)', function (data) {
+                service_name = data.value;
+                if (service_name == '') {
+                    $("#ips").val('');
+                } else {
+                    $.ajax({
+                        url: '/api/get_rolling_nodes_str_by_service',
+                        type: 'POST',
+                        async: false,
+                        data: {
+                            'service_name': service_name,
+                            'env': 'production,rc,sep',
+                        },
+                        error: function (resp) {
+                            layer.msg('发生错误', { time: 2000, icon: 2 });
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            $("#ips").val(resp.data);
+                        }
+                    });
+                }
+            });
+
+            //选择mysql服务器, 刷新实例
+            form.on('select(server_id)', function (data) {
+                value = data.value;
+                if (value == "") {
+                    $("#ins_id").empty();
+                    $("#ins_id").append("<option value=''>" + "请选择" + "</option>");
+                } else {
+                    $.ajax({
+                        url: '/front/get_ins_by_server_id?server_id=' + value,
+                        type: 'POST',
+                        async: false,
+                        error: function (resp) {
+                            console.log(resp);
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            if (resp.errno == 0) {
+                                $("#ins_id").empty();
+                                rows = resp.data;
+                                $("#ins_id").append("<option value=''>" + "请选择" + "</option>");
+                                for (index in rows) {
+                                    row = rows[index];
+                                    $("#ins_id").append("<option value='" + row.id.toString() + "'>" + row.port.toString() + "</option>");
+                                }
+                                //设置选中
+                                $("#ins_id").val(ins_id);
+                            }
+                            form.render('select');
+                        }
+                    });
+                }
+            });
+            //选择mysql实例，刷新数据库
+            form.on('select(ins_id)', function (data) {
+                value = data.value;
+                if (value == "") {
+                    $("#ins_db_id").empty();
+                    $("#ins_db_id").append("<option value=''>" + "请选择" + "</option>");
+                } else {
+                    $.ajax({
+                        url: '/front/get_ins_db_by_ins_id?ins_id=' + value,
+                        type: 'POST',
+                        async: false,
+                        error: function (resp) {
+                            console.log(resp);
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            //console.log(resp);
+                            if (resp.errno == 0) {
+                                rows = resp.data;
+                                $("#ins_db_id").empty();
+                                $("#ins_db_id").append("<option value=''>" + "请选择" + "</option>");
+                                for (index in rows) {
+                                    row = rows[index];
+                                    $("#ins_db_id").append("<option value='" + row.id.toString() + "'>" + row.db_name.toString() + "</option>");
+                                }
+                            }
+                            form.render('select');
+                        }
+                    });
+                }
+            });
+
+            function get_mysql_priv_list(value) {
+                ret = [];
+                $.ajax({
+                    url: '/api/get_mysql_priv_list?priv_type=' + value.toString(),
+                    type: 'POST',
+                    async: false,
+                    error: function (resp) {
+                        layer.msg('发生错误', { time: 2000, icon: 2 });
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        ret = resp.data;
+                    }
+                });
+                return ret;
+            };
+
+            formSelects.on(function (id, vals, val, isAdd, isDisabled) {
+                var privilege = $("input[name='privilege']:checked").val();
+                if (privilege == '4') {
+                    priv = val.value;
+                    if (isAdd) {
+                        self_define_priv.push(priv);
+                    } else {
+                        removeByValue(self_define_priv, priv);
+                    }
+                }
+            });
+
+            form.on('radio(pass_type)', function (data) {
+                value = data.value;
+                if (value == '1') {
+                    $("#spec_user").removeAttr("lay-verify");
+                    $("#spec_pass").removeAttr("lay-verify");
+                    $("#spec_div").hide();
+                } else if (value == '2') {
+                    $("#spec_div").show();
+                    $("#spec_user").attr("lay-verify", "required");
+                    $("#spec_pass").attr("lay-verify", "required");
+                } else {
+                }
+            });
+
+            form.on('radio(node_type)', function (data) {
+                value = data.value;
+
+                if (value == '1') {
+                    //10.10 10.11网段
+                    $("#rolling_label_div").hide();
+                    $("#rolling_select_div").hide();
+                    $("#ips").attr('readonly', 'readonly');
+                    $("#ips").val('10.10.%\n10.11.%')
+                }
+
+                if (value == '2') {
+                    //rolling节点
+                    $("#rolling_label_div").show();
+                    $("#rolling_select_div").show();
+                    $("#ips").attr('readonly', 'readonly');
+                    $("#ips").val('');
+                    $("#roll_service_name").val('');
+                    form.render('select');
+                }
+
+                if (value == '3') {
+                    //自定义节点
+                    $("#rolling_label_div").hide();
+                    $("#rolling_select_div").hide();
+                    $("#ips").removeAttr('readonly');
+                    $("#ips").val('');
+                }
+            });
+
+            form.on('radio(privilege)', function (data) {
+                value = data.value;
+                if (value == '1') {
+                    formSelects.disabled('priv_list');
+                    priv_list = get_mysql_priv_list(1);
+                    formSelects.value('priv_list', priv_list);
+                }
+
+                if (value == '2') {
+                    formSelects.disabled('priv_list');
+                    priv_list = get_mysql_priv_list(2);
+                    formSelects.value('priv_list', priv_list);
+                }
+
+                if (value == '3') {
+                    formSelects.disabled('priv_list');
+                    priv_list = get_mysql_priv_list(3);
+                    formSelects.value('priv_list', priv_list);
+                }
+
+                if (value == '4') {
+                    formSelects.undisabled('priv_list');
+                    formSelects.value('priv_list', self_define_priv);
+                }
+            });
+
+            form.on('submit(commit)', function (data) {
+                $("#commit_btn").attr('disabled', 'disabled');
+                $.ajax({
+                    url: '/grant/apply',
+                    type: 'POST',
+                    async: false,
+                    data: $('#form_id').serialize(),
+                    error: function (resp) {
+                        layer.msg('发生错误', { time: 2000, icon: 2 });
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        if (resp.errno == 0) {
+                            //保存成功了，跳转
+                            layer.msg("提交成功", { time: 2000, icon: 1 }, function () {
+                                window.location.href = '/grant/order';
+                            });
+                        } else {
+                            //保存失败
+                            layer.msg(resp.errmsg, { time: 2000, icon: 2 }, function () {
+                            });
+                        }
+                    }
+                });
+                $("#commit_btn").attr('disabled', false);
+                return false;
+            });
+
+        });
+
+    </script>
+    <script src="../js/feedback.js"></script>
+</body>
+
+</html>

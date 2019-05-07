@@ -1,0 +1,6 @@
+[settings]
+
+#监听端口
+PORT = 9017
+
+LOG_FILE = /var/log/sql-admin/proxy.log

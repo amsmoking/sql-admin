@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">上线申请
+                    </h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+                            请填写上线申请单
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form class="layui-form" action="" id="form_id">
+                                        <input type="hidden" name="sel_ip" id="sel_ip">
+                                        <input type="hidden" name="sel_port" id="sel_port">
+                                        <input type="hidden" name="sel_db_name" id="sel_db_name">
+                                        <!--
+                                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                            <legend>使用说明</legend>
+                                        </fieldset>
+                                        <div class="layui-collapse" lay-filter="test">
+                                            <div class="layui-colla-item">
+                                                <h2 class="layui-colla-title">1.选择要变更的mysql服务器</h2>
+                                                <div class="layui-colla-content">
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                            <div class="layui-colla-item">
+                                                <h2 class="layui-colla-title">2.选择对应端口实例</h2>
+                                                <div class="layui-colla-content">
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                            <div class="layui-colla-item">
+                                                <h2 class="layui-colla-title">3.选择该实例内的数据库名称</h2>
+                                                <div class="layui-colla-content">
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                            <div class="layui-colla-item">
+                                                <h2 class="layui-colla-title">5.提交sql语句</h2>
+                                                <div class="layui-colla-content">
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                            <div class="layui-colla-item">
+                                                <h2 class="layui-colla-title">6.提交sql语句, 管理员审核后上线</h2>
+                                                <div class="layui-colla-content">
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        -->
+                                        <div class="layui-form-item layui-form-text">
+                                                <label class="layui-form-label">申请原因</label>
+                                                <div class="layui-input-block">
+                                                    <textarea lay-verify="required" placeholder="请填写申请变更线上mysql的原因" class="layui-textarea" name="reason" id="reason"></textarea>
+                                                </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">mysql服务器</label>
+                                            <div class="layui-input-block">
+                                                <select id="mysql_server_select" name="server_id" lay-verify="required" lay-filter="sel_f_server" id="sel_id_server" lay-search>
+                                                    <option value=""></option>
+                                                    {% for server in data.mysql_server_list %}
+                                                    <option value="{{server.id}}">{{server.hostname}}/{{server.ip}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">mysql实例</label>
+                                            <div class="layui-input-block">
+                                                <select name="ins_id" lay-verify="required" lay-search id="sel_id_ins" lay-filter="sel_f_ins">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">数据库</label>
+                                            <div class="layui-input-block">
+                                                <select name="ins_db_id" lay-verify="required" lay-search id="sel_id_ins_db" lay-filter="sel_f_ins_db">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">SQL语句</label>
+                                            <div class="layui-input-block">
+                                                <textarea lay-verify="required" rows="10" placeholder="请输入sql语句" class="layui-textarea" name="sql" id="text_id_sql" lay-filter="text_f_sql"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <!--
+                                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                            <legend>使用说明</legend>
+                                        </fieldset>
+                                        -->
+                                        <div class="layui-form-item">
+                                            <div class="layui-collapse" lay-filter="test">
+                                                <div class="layui-colla-item">
+                                                    <h2 class="layui-colla-title">使用说明</h2>
+                                                    <div class="layui-colla-content">
+                                                        <!--
+                                                        <p>1.针对select/insert/update/create/alter加了规则，delete需要审批</p>
+                                                        <p>2.语句之间要有空格，例where id = 100, 没有空格会影响判断的准确性</p>
+                                                        <p>3.SQL语句要后面要加分号, MySQL解析器规定分号才可以执行SQL</p>
+                                                        <p>4.反引号`会造成上线失败，需要用文本编辑器替换掉</p>
+                                                        <p>5.支持多条SQL解析，用######六个井号分割</p>
+                                                        -->
+                                                        <p>1.语句之间要有空格，例where id = 100, 没有空格会影响判断的准确性</p>
+                                                        <p>2.SQL语句要后面要加分号, MySQL解析器规定分号才可以执行SQL</p>
+                                                        <p>3.提交申请后，需等待管理员审核后才能上线</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit lay-filter="commit" id="commit_btn">提交</button>
+                                            </div>
+                                        </div>
+
+                                        <!--
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">输入框</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        -->
+                                        <!--
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">密码框</label>
+                                            <div class="layui-input-inline">
+                                                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux">辅助文字</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">选择框</label>
+                                            <div class="layui-input-block">
+                                                <select name="city" lay-verify="required">
+                                                    <option value=""></option>
+                                                    <option value="0">北京</option>
+                                                    <option value="1">上海</option>
+                                                    <option value="2">广州</option>
+                                                    <option value="3">深圳</option>
+                                                    <option value="4">杭州</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">复选框</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" name="like[write]" title="写作">
+                                                <input type="checkbox" name="like[read]" title="阅读" checked>
+                                                <input type="checkbox" name="like[dai]" title="发呆">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">开关</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" name="switch" lay-skin="switch">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">单选框</label>
+                                            <div class="layui-input-block">
+                                                <input type="radio" name="sex" value="男" title="男">
+                                                <input type="radio" name="sex" value="女" title="女" checked>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">文本域</label>
+                                            <div class="layui-input-block">
+                                                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                            </div>
+                                        </div>
+                                        -->
+                                    </form>
+
+                                    <!--
+                                    <form role="form" action="" method="post" id="form_id" class="layui-form">
+                                            <div class="form-group">
+                                                <label>mysql服务器</label>
+                                                <select id="mysql_server_select" name="city" lay-verify="required" lay-search id="sel_mysql_server">
+                                                    <option value=""></option>
+                                                    {% for server in data.mysql_server_list %}
+                                                    <option value="{{server.ip}}">{{server.hostname}}/{{server.ip}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                    </form>
+                                    -->
+
+                                    
+
+                                    
+                                </div>
+                                <!--</form>-->
+                                <div class="col-lg-6">
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">语法错误</label>
+                                        <div class="layui-input-block">
+                                            <textarea rows="10" class="layui-textarea" name="sql" id="text_id_error_warn_display" lay-filter="text_f_error_warn_display"
+                                                disabled></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">优化建议</label>
+                                        <div class="layui-input-block">
+                                            <textarea rows="10" class="layui-textarea" name="sql" id="text_id_sql" lay-filter="text_f_sql" disabled></textarea>
+                                        </div>
+                                    </div>
+                                    <!--
+                                        <form role="form">
+                                            <fieldset disabled>
+                                                <div class="form-group">
+                                                    <label for="disabledSelect">Disabled input</label>
+                                                    <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input" disabled>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="disabledSelect">Disabled select menu</label>
+                                                    <select id="disabledSelect" class="form-control">
+                                                        <option>Disabled select</option>
+                                                    </select>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">Disabled Checkbox
+                                                    </label>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Disabled Button</button>
+                                            </fieldset>
+                                        </form>
+                                        <h1>Form Validation States</h1>
+                                        <form role="form">
+                                            <div class="form-group has-success">
+                                                <label class="control-label" for="inputSuccess">Input with success</label>
+                                                <input type="text" class="form-control" id="inputSuccess">
+                                            </div>
+                                            <div class="form-group has-warning">
+                                                <label class="control-label" for="inputWarning">Input with warning</label>
+                                                <input type="text" class="form-control" id="inputWarning">
+                                            </div>
+                                            <div class="form-group has-error">
+                                                <label class="control-label" for="inputError">Input with error</label>
+                                                <input type="text" class="form-control" id="inputError">
+                                            </div>
+                                        </form>
+                                        <h1>Input Groups</h1>
+                                        <form role="form">
+                                            <div class="form-group input-group">
+                                                <span class="input-group-addon">@</span>
+                                                <input type="text" class="form-control" placeholder="Username">
+                                            </div>
+                                            <div class="form-group input-group">
+                                                <input type="text" class="form-control">
+                                                <span class="input-group-addon">.00</span>
+                                            </div>
+                                            <div class="form-group input-group">
+                                                <span class="input-group-addon"><i class="fa fa-eur"></i>
+                                                </span>
+                                                <input type="text" class="form-control" placeholder="Font Awesome Icon">
+                                            </div>
+                                            <div class="form-group input-group">
+                                                <span class="input-group-addon">$</span>
+                                                <input type="text" class="form-control">
+                                                <span class="input-group-addon">.00</span>
+                                            </div>
+                                            <div class="form-group input-group">
+                                                <input type="text" class="form-control">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                        -->
+                                </div>
+                                <!-- /.col-lg-6 (nested) -->
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery/jquery.validate.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+
+    <script src="../vendor/layui/layui.js"></script>
+    <script src="../vendor/addel/addel.jquery.js"></script>
+
+    <script type="text/javascript">
+        layui.use(['form', 'element', 'jquery', 'layer'], function () {
+            var form = layui.form;
+            var $ = jQuery = layui.jquery;
+            var layer = layui.layer;
+            //选择mysql服务器, 刷新实例
+            form.on('select(sel_f_server)', function (data) {
+                value = data.value;
+                if (value == "") {
+                    $("#sel_id_ins").empty();
+                    $("#sel_id_ins").append("<option value=''>" + "请选择" + "</option>");
+                } else {
+                    $.ajax({
+                        url: '/front/get_ins_by_server_id?server_id=' + value,
+                        type: 'POST',
+                        async: false,
+                        error: function (resp) {
+                            console.log(resp);
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            if (resp.errno == 0) {
+                                $("#sel_id_ins").empty();
+                                rows = resp.data;
+                                $("#sel_id_ins").append("<option value=''>" + "请选择" + "</option>");
+                                for (index in rows) {
+                                    row = rows[index];
+                                    $("#sel_id_ins").append("<option value='" + row.id.toString() + "'>" + row.port.toString() + "</option>");
+                                }
+                            }
+                            form.render('select');
+                        }
+                    });
+                }
+            });
+            //选择mysql实例，刷新数据库
+            form.on('select(sel_f_ins)', function (data) {
+                value = data.value;
+                if (value == "") {
+                    $("#sel_id_ins_db").empty();
+                    $("#sel_id_ins_db").append("<option value=''>" + "请选择" + "</option>");
+                } else {
+                    $.ajax({
+                        url: '/front/get_ins_db_by_ins_id?ins_id=' + value,
+                        type: 'POST',
+                        async: false,
+                        error: function (resp) {
+                            console.log(resp);
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            //console.log(resp);
+                            if (resp.errno == 0) {
+                                rows = resp.data;
+                                $("#sel_id_ins_db").empty();
+                                $("#sel_id_ins_db").append("<option value=''>" + "请选择" + "</option>");
+                                for (index in rows) {
+                                    row = rows[index];
+                                    //console.log(row);
+                                    $("#sel_id_ins_db").append("<option value='" + row.id.toString() + "'>" + row.db_name.toString() + "</option>");
+                                }
+                            }
+                            form.render('select');
+                        }
+                    });
+                }
+            });
+            //监听提交
+            form.on('submit(commit)', function (data) {
+                $("#commit_btn").attr('disabled', true);
+                $("#text_id_error_warn_display").val("");
+                //赋值到hidden
+                var sel_ip_text = $("#mysql_server_select").find("option:selected").text();
+                var sel_port_text = $("#sel_id_ins").find("option:selected").text();
+                var sel_db_name_text = $("#sel_id_ins_db").find("option:selected").text();
+                $("#sel_ip").val(sel_ip_text);
+                $("#sel_port").val(sel_port_text);
+                $("#sel_db_name").val(sel_db_name_text);
+
+                $.ajax({
+                    url: '/mysql_change/commit',
+                    type: 'POST',
+                    async: false,
+                    data: $('#form_id').serialize(),
+                    error: function (resp) {
+                        console.log(resp);
+                        $("#commit_btn").attr('disabled', false);
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        console.log(resp);
+                        /*
+                        错误码：
+                        0.没有警告，没有错误，审核通过，提交到后台中
+                        1.执行sql检查发生了异常，mysql连接不上等原因，用户名密码不对等
+                        2.有警告，无错误
+                        3.无警告，有错误
+                        4.有警告，有错误
+                        */
+                        if (resp.errno == 0) {
+                            //审核成功了，跳转
+                            layer.msg("提交成功，请等待管理员审核", { time: 3000, icon: 1 }, function(){
+                                window.location.href = '/mysql_change/index';
+                            });
+                        } else if (resp.errno == 1) {
+                            //sql审核后端抛异常了
+                            console.log(resp.errmsg)
+                            layer.msg(resp.errmsg, { time: 3000, icon: 2 });
+                        } else if (resp.errno == 2) {
+                            //有警告，无错误
+                            $("#text_id_error_warn_display").val(resp.data.warning);
+                        } else if (resp.errno == 3) {
+                            //无警告，有错误
+                            $("#text_id_error_warn_display").val(resp.data.error);
+                        } else if (resp.errno == 4) {
+                            //有警告，有错误
+                            //这种情况只显示错误，用户先修正错误
+                            $("#text_id_error_warn_display").val(resp.data.error);
+                        } else if (resp.errno == 5) {
+                            //保存失败
+                            layer.msg(resp.errmsg, { time: 3000, icon: 2 });
+                        } else {
+                            //未知错误
+                            layer.msg("未知错误", { time: 3000, icon: 2 });
+                        }
+                        $("#commit_btn").attr('disabled', false);
+                        form.render('select');
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,723 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<head>
+    <title>{{data.title}}</title>
+    <link href="../vendor/wizard/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../vendor/wizard/prettify.css" rel="stylesheet">
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+    <link href="../vendor/doubleSelect/css/dsSelect.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        .bwizard-steps {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            background: #fff
+        }
+
+        .bwizard-steps .active {
+            color: #fff;
+            background: #007ACC
+        }
+
+        .bwizard-steps .active:after {
+            border-left-color: #007ACC
+        }
+
+        .bwizard-steps .active a {
+            color: #fff;
+            cursor: default
+        }
+
+        .bwizard-steps .label {
+            position: relative;
+            top: -1px;
+            margin: 0 5px 0 0;
+            padding: 1px 5px 2px
+        }
+
+        .bwizard-steps .active .label {
+            background-color: #333;
+        }
+
+        .bwizard-steps li {
+            display: inline-block;
+            position: relative;
+            margin-right: 5px;
+            padding: 12px 17px 10px 30px;
+            *display: inline;
+            *padding-left: 17px;
+            background: #efefef;
+            line-height: 18px;
+            list-style: none;
+            zoom: 1;
+        }
+
+        .bwizard-steps li:first-child {
+            padding-left: 12px;
+            -moz-border-radius: 4px 0 0 4px;
+            -webkit-border-radius: 4px 0 0 4px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .bwizard-steps li:first-child:before {
+            border: none
+        }
+
+        .bwizard-steps li:last-child {
+            margin-right: 0;
+            -moz-border-radius: 0 4px 4px 0;
+            -webkit-border-radius: 0 4px 4px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .bwizard-steps li:last-child:after {
+            border: none
+        }
+
+        .bwizard-steps li:before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 0;
+            width: 0;
+            border-bottom: 20px inset transparent;
+            border-left: 20px solid #fff;
+            border-top: 20px inset transparent;
+            content: ""
+        }
+
+        .bwizard-steps li:after {
+            position: absolute;
+            right: -20px;
+            top: 0;
+            height: 0;
+            width: 0;
+            border-bottom: 20px inset transparent;
+            border-left: 20px solid #efefef;
+            border-top: 20px inset transparent;
+            content: "";
+            z-index: 2;
+        }
+
+        .bwizard-steps a {
+            color: #333
+        }
+
+        .bwizard-steps a:hover {
+            text-decoration: none
+        }
+
+        .bwizard-steps.clickable li:not(.active) {
+            cursor: pointer
+        }
+
+        .bwizard-steps.clickable li:hover:not(.active) {
+            background: #ccc
+        }
+
+        .bwizard-steps.clickable li:hover:not(.active):after {
+            border-left-color: #ccc
+        }
+
+        .bwizard-steps.clickable li:hover:not(.active) a {
+            color: #08c
+        }
+
+        @media (max-width: 480px) {
+            /* badges only on small screens */
+            .bwizard-steps li:after,
+            .bwizard-steps li:before {
+                border: none
+            }
+            .bwizard-steps li,
+            .bwizard-steps li.active,
+            .bwizard-steps li:first-child,
+            .bwizard-steps li:last-child {
+                margin-right: 0;
+                padding: 0;
+                background-color: transparent
+            }
+        }
+
+        .abc {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+        <form id="form_id" class="layui-form">
+
+            <div id="page-wrapper">
+                <div class="row">
+
+                    <div class='container'>
+                        <section id="wizard">
+                            <div class="page-header">
+                                <h3>创建任务</h3>
+                            </div>
+
+                            <div id="rootwizard">
+                                <div class="navbar">
+                                    <div class="navbar-inner">
+                                        <div class="container">
+                                            <ul>
+                                                <li>
+                                                    <a href="#tab1" data-toggle="tab">填写源MySQL信息</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#tab2" data-toggle="tab">填写目的MySQL信息</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#tab3" data-toggle="tab">选择需要归档的表</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#tab4" data-toggle="tab">填写归档条件</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="bar" class="progress">
+                                    <div id="progressbar_id" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: 0%;"></div>
+                                </div>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane" id="tab1">
+                                        <div class="layui-form-item">
+                                            <label class="control-label">MySQL IP/域名/主机名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_host" id="src_host" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">端口</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_port" id="src_port" required lay-verify="required|number" placeholder="" autocomplete="off"
+                                                class="layui-input" style="width:300px" value="3306">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">用户名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_user" id="src_user" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">密码</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="password" name="src_pwd" id="src_pwd" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab2">
+                                        <div class="layui-form-item">
+                                            <label class="control-label">MySQL IP/域名/主机名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_host" id="dst_host" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">端口</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_port" id="dst_port" required lay-verify="required|number" placeholder="" autocomplete="off"
+                                                class="layui-input" style="width:300px" value="3306">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">用户名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_user" id="dst_user" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">密码</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="password" name="dst_pwd" id="dst_pwd" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab3">
+                                        <div class="layui-form-item">
+                                            <label class="control-label">选择源MySQL库名</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="src_db" name="src_db" lay-filter="src_db">
+                                                <option value="请选择库名"></option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">选择要归档的表</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="dsSelect" id="dsSelectTemp">
+                                            </div>
+                                            <input type="hidden" id="to_archive_tables" name="to_archive_tables">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">归档到目的MySQL的库名</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="dst_db" name="dst_db" lay-filter="dst_db">
+                                                <option value="请选择库名"></option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">归档到目的MySQL的表名</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="dst_table_type" name="dst_table_type" lay-filter="dst_table_type">
+                                                <option value="0">与原表名一致</option>
+                                                <option value="1">原表名 +  _时间戳</option>
+                                                <option value="2">原表名 + _年</option>
+                                                <option value="3">原表名 + _年_月</option>
+                                                <option value="4">原表名 + _年_月_日</option>
+                                                <option value="5">原表名 + _年_月_日_时_分_秒</option>
+                                                <option value="6">自定义</option>
+                                            </select>
+                                            
+                                            <input type="text" name="dst_table" id="dst_table" required lay-verify="required" placeholder="输入表名" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="tab4">
+                                        <div class="layui-form-item">
+                                            <label class="control-label">where条件</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="where" id="where" required lay-verify="required" placeholder="例: id < 3000" autocomplete="off" class="layui-input"
+                                                style="width:300px">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">归档后删除源数据</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="is_del_src_data" name="is_del_src_data">
+                                                <option value="0">否</option>
+                                                <option value="1">是</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">目的MySQL中表不存在时是否自动创建</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="dst_if_no_create" name="dst_if_no_create">
+                                                <option value="0" >否</option>
+                                                <option value="1" >是</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">备份源数据</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="is_backup" name="is_backup">
+                                                <option value="0">否</option>
+                                                <option value="1">是</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">字符集</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="charset" name="charset">
+                                                <option value="utf8">utf8</option>
+                                                <option value="latin1">latin1</option>
+                                                <option value="gbk">gbk</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">是否只执行一次</label>
+                                        </div>
+                                        <div class="layui-form-item" style="width:300px">
+                                            <select id="is_exec_once" name="is_exec_once">
+                                                <option value="0">否</option>
+                                                <option value="1">是</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">cron表达式</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" name="cron" id="cron" required lay-verify="required" placeholder="例,每月2号执行: 0 0 2 * *" autocomplete="off"
+                                                            class="layui-input" style="width:300px">
+                                                    </td>
+                                                    <td>&nbsp;&nbsp;
+                                                        <a href="http://cron.qqe2.com/" target="_blank">
+                                                            <font color="blue" size="1">生成cron表达式</font>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">备注</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="remark" id="remark" required lay-verify="required" autocomplete="off" class="layui-input" style="width:300px">
+                                        </div>
+                                    </div>
+                                    <ul class="pager wizard">
+                                        <li class="previous first" style="display:none;">
+                                            <a href="#">First</a>
+                                        </li>
+                                        <li class="previous">
+                                            <a href="#">上一步</a>
+                                        </li>
+                                        <li class="next last" style="display:none;">
+                                            <a href="#">Last</a>
+                                        </li>
+                                        <li aligin="right">
+                                            <a href="#" id="finish_btn">完成</a>
+                                        </li>
+                                        <li class="next">
+                                            <a href="#" id="next_btn">下一步</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                        </section>
+                        </div>
+                    </div>
+                </div>
+        </form>
+        </div>
+        <script src="../vendor/jquery/jquery.min.js"></script>
+        <script src="../vendor/wizard/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../vendor/wizard/jquery.bootstrap.wizard.js"></script>
+        <script src="../vendor/wizard/prettify.js"></script>
+        <script src="../vendor/jquery/jquery.validate.js"></script>
+        <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../dist/js/sb-admin-2.js"></script>
+        <script src="../vendor/layui/layui.js"></script>
+        <script src="../vendor/doubleSelect/js/dsSelect.js"></script>
+        <script>
+            layer = null;
+
+            function check_mysql_conn_state(db_host, db_port, db_user, db_pwd) {
+                conn_tag = false;
+                params = { 'db_host': db_host, 'db_port': db_port, 'db_user': db_user, 'db_pwd': db_pwd };
+                url = '/api/test_mysql_conn_state';
+                err = null;
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    async: false,
+                    data: params,
+                    error: function (resp) {
+                        err = '发生错误';
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        if (resp.errno != 0) {
+                            err = resp.errmsg;
+                        }
+                    }
+                });
+                return err;
+            };
+
+            function load_src_dst_info(src, dst) {
+                params = {
+                    'src_host': src['host'],
+                    'src_port': src['port'],
+                    'src_user': src['user'],
+                    'src_pwd': src['pwd'],
+                    'dst_host': dst['host'],
+                    'dst_port': dst['port'],
+                    'dst_user': dst['user'],
+                    'dst_pwd': dst['pwd'],
+                };
+                url = '/api/load_src_dst_info';
+                src_dst_info = {};
+                ret = { 'err:': null, 'src_dst_info': src_dst_info };
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    async: false,
+                    data: params,
+                    error: function (resp) {
+                        ret['err'] = '发生错误';
+                        ret['src_dst_info'] = src_dst_info;
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        if (resp.errno != 0) {
+                            ret['err'] = resp.errmsg;
+                            ret['src_dst_info'] = src_dst_info;
+                        } else {
+                            ret['err'] = null;
+                            ret['src_dst_info'] = resp.data;
+                        }
+                    }
+                });
+                return ret;
+            };
+
+            dsSelectObj = null;
+
+            function init_double_select() {
+                dsSelectObj = new dsSelect("dsSelectTemp");
+                dsSelectObj.multiSelect = true;
+                dsSelectObj.init();
+                dsSelectObj.setLeftData([], "name");
+                dsSelectObj.setRightData([], "name");
+            };
+
+            function makeDsData(arr) {
+                ret = [];
+                for (var i in arr) {
+                    item = arr[i];
+                    ret.push({ 'id': item, 'name': item });
+                }
+                return ret;
+            };
+
+            src_dst_info = null;
+
+            $(document).ready(function () {
+                $("#dst_table").hide();
+                init_double_select();
+                form = null;
+                debug = false;
+
+                layui.use(['layer', 'form', 'element'], function () {
+                    form = layui.form;
+                    layer = layui.layer;
+
+                    form.on('select(src_db)', function (data) {
+                        value = data.value;
+                        if (value == null || value == '') {
+                            dsSelectObj = new dsSelect("dsSelectTemp");
+                            dsSelectObj.multiSelect = true;
+                            dsSelectObj.init();
+                            dsSelectObj.setLeftData([], "name");
+                            dsSelectObj.setRightData([], "name");
+                        } else {
+                            src_info = src_dst_info['src_info'];
+                            tables = src_info[value];
+                            dsData = makeDsData(tables);
+                            dsSelectObj = new dsSelect("dsSelectTemp");
+                            dsSelectObj.multiSelect = true;
+                            dsSelectObj.init();
+                            dsSelectObj.setLeftData(dsData, "name");
+                            dsSelectObj.setRightData([], "name");
+                        }
+                    });
+
+                    form.on('select(dst_table_type)', function(data) {
+                        value = data.value;
+                        if (value == '6') {
+                            $("#dst_table").show();
+                        } else {
+                            $("#dst_table").val('');
+                            $("#dst_table").hide();
+                        }
+                    });
+                });
+
+                $('#rootwizard').bootstrapWizard({
+                    tabClass: 'bwizard-steps',
+                    onTabShow: function (tab, navigation, index) {
+
+                        var $total = navigation.find('li').length;
+                        var $current = index + 1;
+                        var $percent = ($current / $total) * 100;
+                        $percent = (index / $total) * 100;
+                        $("#progressbar_id").css({ width: $percent + '%' });
+                        if (index == 3) {
+                            $("#finish_btn").show();
+
+                            $("#next_btn").hide();
+                        } else {
+                            $("#finish_btn").hide();
+                            $("#next_btn").show();
+                        }
+                    },
+                    onTabClick: function (tab, navigation, index) {
+                        return false;
+                    },
+                    onNext: function (tab, navigation, index) {
+                        if (debug === true) {
+                            return true;
+                        }
+
+                        curIndex = index;
+                        passTag = true;
+
+                        if (curIndex == 1) {
+                            //填写了源MySQL地址
+                            var db_host = $("#src_host").val();
+                            var db_port = $("#src_port").val();
+                            var db_user = $("#src_user").val();
+                            var db_pwd = $("#src_pwd").val();
+                            err = check_mysql_conn_state(db_host, db_port, db_user, db_pwd);
+                            if (err != null) {
+                                //测试连接失败
+                                layer.msg(err, { time: 2000, icon: 2 });
+                                passTag = false;
+                            } else {
+                                //测试连接成功
+                                layer.msg("测试连接源MySQL成功", { time: 2000, icon: 1 });
+                            }
+                        } else if (curIndex == 2) {
+                            //清空控件
+                            dsSelectObj = new dsSelect("dsSelectTemp");
+                            dsSelectObj.multiSelect = true;
+                            dsSelectObj.init();
+                            dsSelectObj.setLeftData([], "name");
+                            dsSelectObj.setRightData([], "name");
+
+                            //填写了目的MySQL地址
+                            //填写了源MySQL地址
+                            var db_host = $("#dst_host").val();
+                            var db_port = $("#dst_port").val();
+                            var db_user = $("#dst_user").val();
+                            var db_pwd = $("#dst_pwd").val();
+                            err = check_mysql_conn_state(db_host, db_port, db_user, db_pwd);
+                            if (err != null) {
+                                //测试连接失败
+                                layer.msg(err, { time: 2000, icon: 2 });
+                                passTag = false;
+                            } else {
+                                //测试连接成功
+                                layer.msg("测试连接目的MySQL成功", { time: 2000, icon: 1 });
+                                //选择了要归档的表
+                                src = {
+                                    'host': $("#src_host").val(),
+                                    'port': $("#src_port").val(),
+                                    'user': $("#src_user").val(),
+                                    'pwd': $("#src_pwd").val(),
+                                };
+                                dst = {
+                                    'host': $("#dst_host").val(),
+                                    'port': $("#dst_port").val(),
+                                    'user': $("#dst_user").val(),
+                                    'pwd': $("#dst_pwd").val(),
+                                };
+                                ret = load_src_dst_info(src, dst);
+                                err = ret['err'];
+                                src_dst_info = ret['src_dst_info'];
+                                src_info = src_dst_info['src_info'];
+                                $("#src_db").empty();
+                                $("#src_db").append('<option value="">请选择源MySQL库名</option>');
+                                for (var src_db_name in src_info) {
+                                    //console.log('add src db name', src_db_name);
+                                    $("#src_db").append('<option value="' + src_db_name + '">' + src_db_name + '</option>');
+                                }
+                                dst_info = src_dst_info['dst_info'];
+                                $("#dst_db").empty();
+                                $("#dst_db").append('<option value="">请选择目的MySQL库名</option>');
+                                for (var dst_db_name in dst_info) {
+                                    //console.log('add dst db name', dst_db_name);
+                                    $("#dst_db").append('<option value="' + dst_db_name + '">' + dst_db_name + '</option>');
+                                }
+                                form.render('select');
+                            }
+                        } else if (curIndex == 3) {
+                            src_db = $("#src_db").val();
+                            select_tables = dsSelectObj.getSelectRightValus();
+                            dst_db = $("#dst_db").val();
+                            dst_table_type = $("#dst_table_type").val();
+                            if (src_db == null || src_db == '') {
+                                layer.msg('请选择源MySQL库名', { time: 2000, icon: 2 });
+                                passTag = false;
+                                return passTag;
+                            }
+                            if (select_tables.length == 0) {
+                                layer.msg('请选择需要归档的表', { time: 2000, icon: 2 });
+                                passTag = false;
+                                return passTag;
+                            }
+                            if (dst_db == null || dst_db == '') {
+                                layer.msg('请选择目的MySQL库名', { time: 2000, icon: 2 });
+                                passTag = false;
+                                return passTag;
+                            }
+                            to_arcive_tables = dsSelectObj.getSelectRightValus();
+                            
+                            if (dst_table_type == '6') {
+                                if (to_arcive_tables.length > 1) {
+                                    layer.msg('自定义表名，只能选择一个需要归档的表，不能选择多个', { time: 2000, icon: 2 });
+                                    passTag = false;
+                                    return passTag;
+                                }
+
+                                if ($("#dst_table").val().trim() == '') {
+                                    layer.msg('请输入目的表名', { time: 2000, icon: 2 });
+                                    passTag = false;
+                                    return passTag;
+                                }
+                            }
+                            to_archive_tables_str = '';
+                            if (to_arcive_tables.length > 0) {
+                                tmp_arr = [];
+                                for (var i in to_arcive_tables) {
+                                    tmp = to_arcive_tables[i];
+                                    tmp_arr.push(tmp['id']);
+                                }
+                                console.log(tmp_arr);
+                                to_archive_tables_str = tmp_arr.join(',');
+                            }
+                            $("#to_archive_tables").val(to_archive_tables_str);
+                        } else {
+                            //填写了归档条件
+                        }
+                        return passTag;
+                    }
+                });
+
+                $("#finish_btn").click(function () {
+                    $("#finish_btn").removeAttr('href');
+                    url = '/api/add_archive_task';
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        async: false,
+                        data: $("#form_id").serialize(),
+                        error: function (resp) {
+                            layer.msg('发生错误', { time: 2000, icon: 2 });
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            if (resp.errno == 0) {
+                                //layer.msg('任务创建成功');
+                                //进度条设置为99%
+                                $("#progressbar_id").css({ width: '99.9%' });
+                                layer.msg("归档任务创建成功", { time: 2000, icon: 1 }, function () {
+                                    window.location.href = '/archive/task';
+                                });
+                            } else {
+                                //失败
+                                layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                                $("#finish_btn").attr('href', '#');
+                            }
+                        }
+                    });
+                });
+                window.prettyPrint && prettyPrint()
+            });
+        </script>
+</body>
+
+</html>

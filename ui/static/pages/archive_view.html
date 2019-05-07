@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{data.home_title}}</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <form class="layui-form" action="" method="POST" id="form_id">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                    {{data.page_title}}
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <input type="hidden" id="task_id" name="task_id" value="{{data.task.id}}">
+                                        <div class="layui-form-item">
+                                            <h3 class="page-header">源</h3>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">MySQL IP/域名/主机名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_host" id="src_host" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.src_host}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">端口</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_port" id="src_port" required lay-verify="required|number" placeholder="" autocomplete="off"
+                                                class="layui-input" value="{{data.task.src_port}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">用户名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_user" id="src_user" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.src_user}}">
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="control-label">密码</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="password" name="src_pwd" id="src_pwd" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.src_pwd}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">库名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_db" id="src_db" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.src_db}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">表名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="src_table" id="src_table" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.src_table}}">
+                                        </div>
+                                        <!--
+                                        <div class="layui-form-item">
+                                            <label class="control-label">WHERE条件</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="where_con" id="where_con" required lay-verify="required" placeholder="请输入where条件，例如where id < 1000"
+                                                autocomplete="off" class="layui-input">
+                                        </div>
+                                        -->
+
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div class="layui-form-item">
+                                            <h3 class="page-header">目的</h3>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">MySQL IP/域名/主机名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_host" id="dst_host" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.dst_host}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">端口</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_port" id="dst_port" required lay-verify="required|number" placeholder="" autocomplete="off"
+                                                class="layui-input" value="{{data.task.dst_port}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">用户名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_user" id="dst_user" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.dst_user}}">
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="control-label">密码</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="password" name="dst_pwd" id="dst_pwd" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.dst_pwd}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">库名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_db" id="dst_db" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.dst_db}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">表名</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="dst_table" id="dst_table" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input" value="{{data.task.dst_table}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-heading">
+                                其他配置
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="layui-form-item">
+                                            <label class="control-label">WHERE条件（不需要写WHERE关键字）</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="where_con" id="where_con" required lay-verify="required" placeholder="例: id < 3000" autocomplete="off" class="layui-input" value="{{data.task.where_condition}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">删除归档数据</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            
+                                            <select id="is_delete" name="is_delete">
+                                                <option value="1" {%if data.task.is_delete == 1 %}selected="selected"{%endif%}>是</option>
+                                                <option value="0" {%if data.task.is_delete == 0 %}selected="selected"{%endif%}>否</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">备份</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <select id="is_backup" name="is_backup">
+                                                <option value="1" {%if data.task.is_backup == 1 %}selected="selected"{%endif%}>是</option>
+                                                <option value="0" {%if data.task.is_backup == 0 %}selected="selected"{%endif%}>否</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">字符集</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="charset" id="charset" placeholder="可选，默认与源MySQL表编码一致" autocomplete="off" class="layui-input" value="{{data.task.charset}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">目的MySQL中表不存在时是否自动创建</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                                <select id="dst_if_no_create" name="dst_if_no_create">
+                                                    <option value="1" {%if data.task.dst_if_no_create == 1 %}selected="selected"{%endif%}>是</option>
+                                                    <option value="0" {%if data.task.dst_if_no_create == 0 %}selected="selected"{%endif%}>否</option>
+                                                </select>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">时间规则 (与cron格式一致)</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <input type="text" name="cron" id="cron" required lay-verify="required" placeholder="例，每月2号执行: 0 0 2 * *" autocomplete="off" class="layui-input" value="{{data.task.cron}}">
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="control-label">备注</label>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <textarea placeholder="" class="layui-textarea" name="remark" id="remark">{{data.task.remark}}</textarea>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" lay-submit lay-filter="commit" id="commit_btn">提交</button>
+                                                <!--
+                                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="commit" id="save_btn">保存</button>
+                                                -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.row (nested) -->
+                        </div>
+                    </form>
+
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery/jquery.validate.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+
+    <script src="../vendor/layui/layui.js"></script>
+    <script src="../vendor/addel/addel.jquery.js"></script>
+
+    <script type="text/javascript">
+        layui.use(['form', 'element', 'jquery', 'layer'], function () {
+            var form = layui.form;
+            var $ = jQuery = layui.jquery;
+            var layer = layui.layer;
+
+            form.on('submit(commit)', function (data) {
+                $("#commit_btn").attr('disabled', true);
+                btn = data.elem;
+                btn_id = $(btn).attr('id');
+                layer.load();
+                if (btn_id == 'commit_btn') {
+                    //提交
+                    $.ajax({
+                        url: '/archive/commit',
+                        type: 'POST',
+                        async: true,
+                        data: $('#form_id').serialize(),
+                        error: function (resp) {
+                            layer.closeAll('loading');
+                            console.log(resp);
+                            layer.msg('发生错误', { time: 2000, icon: 3 });
+                        },
+                        success: function (resp) {
+                            layer.closeAll('loading');
+                            resp = $.parseJSON(resp);
+                            if (resp.errno == 0) {
+                                layer.msg("提交成功", { time: 2000, icon: 1 }, function () {
+                                    window.location.href = '/archive/task';
+                                });
+                            } else {
+                                layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                            }
+                        },
+                    });
+                }
+                $("#commit_btn").attr('disabled', false);
+
+                return false;
+            });
+
+
+            /*
+            //监听提交
+            form.on('submit(commit)', function (data) {
+                btn = data.elem;
+                btn_id = $(btn).attr('id')
+                if (btn_id == 'commit_btn') {
+                    //提交
+                    $("#commit_btn").attr('disabled', true);
+                    layer.load();
+                    $("#text_id_error_warn_display").val("");
+                    //赋值到hidden
+                    var sel_ip_text = $("#mysql_server_select").find("option:selected").text();
+                    var sel_port_text = $("#sel_id_ins").find("option:selected").text();
+                    var sel_db_name_text = $("#sel_id_ins_db").find("option:selected").text();
+                    $("#sel_ip").val(sel_ip_text);
+                    $("#sel_port").val(sel_port_text);
+                    $("#sel_db_name").val(sel_db_name_text);
+                    $.ajax({
+                        url: '/mysql_change/commit',
+                        type: 'POST',
+                        async: true,
+                        data: $('#form_id').serialize(),
+                        error: function (resp) {
+                            layer.closeAll('loading');
+                            console.log(resp);
+                            $("#commit_btn").attr('disabled', false);
+                            layer.msg('发生错误', { time: 2000, icon: 2 });
+                        },
+                        success: function (resp) {
+                            layer.closeAll('loading');
+                            resp = $.parseJSON(resp);
+                            format_sql = resp.data.format_sql;
+                            if (format_sql != null && format_sql != '') {
+                                $("#text_id_sql").val(format_sql);
+                            }
+                            //affect_rows = resp.affect_rows;
+                            //$("#affect_rows").val(affect_rows);
+                            //console.log(resp);
+                            //错误码：
+                            //0.没有警告，没有错误，审核通过，提交到后台中
+                            //1.执行sql检查发生了异常，mysql连接不上等原因，用户名密码不对等
+                            //2.有警告，无错误
+                            //3.无警告，有错误
+                            //4.有警告，有错误
+                            if (resp.errno == 0) {
+                                //审核成功了，跳转
+                                layer.msg("提交成功，请等待管理员审核", { time: 2000, icon: 1 }, function () {
+                                    window.location.href = '/sql_order/my_order';
+                                });
+                            } else if (resp.errno == 1) {
+                                //sql审核后端抛异常了
+                                console.log(resp.errmsg)
+                                layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                            } else if (resp.errno == 2) {
+                                //有警告，无错误
+                                $("#text_id_error_warn_display").val(resp.data.warning);
+                            } else if (resp.errno == 3) {
+                                //无警告，有错误
+                                $("#text_id_error_warn_display").val(resp.data.error);
+                            } else if (resp.errno == 4) {
+                                //有警告，有错误
+                                //这种情况只显示错误，用户先修正错误
+                                $("#text_id_error_warn_display").val(resp.data.error);
+                            } else if (resp.errno == 5) {
+                                //保存失败
+                                layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                            } else if (resp.errno == 6) {
+                                //无警告，无错误，但是有影响行数超过阀值的
+                                affect_rows_exceed_sql = resp.data.affect_rows_exceed_sql;
+                                affect_rows_exceed_cnt = resp.data.affect_rows_exceed_cnt.toString();
+                                affect_rows_exceed_limit = resp.data.affect_rows_exceed_limit.toString();
+                                $("#text_id_error_warn_display").val("影响行数超过了" + affect_rows_exceed_limit + "条。" + "sql:" + affect_rows_exceed_sql + " 影响行数:" + affect_rows_exceed_cnt);
+                            }
+                            else {
+                                //未知错误
+                                layer.msg("未知错误", { time: 2000, icon: 2 });
+                            }
+                            $("#commit_btn").attr('disabled', false);
+                        }
+                    });
+                    form.render();
+                    return false;
+                } else {
+                    //保存
+                    $("#save_btn").attr('disabled', true);
+                    layer.load();
+                    //赋值到hidden
+                    var sel_ip_text = $("#mysql_server_select").find("option:selected").text();
+                    var sel_port_text = $("#sel_id_ins").find("option:selected").text();
+                    var sel_db_name_text = $("#sel_id_ins_db").find("option:selected").text();
+                    $("#sel_ip").val(sel_ip_text);
+                    $("#sel_port").val(sel_port_text);
+                    $("#sel_db_name").val(sel_db_name_text);
+                    $.ajax({
+                        url: '/mysql_change/save',
+                        type: 'POST',
+                        async: true,
+                        data: $('#form_id').serialize(),
+                        error: function (resp) {
+                            layer.closeAll('loading');
+                            console.log(resp);
+                            $("#save_btn").attr('disabled', false);
+                            layer.msg('发生错误', { time: 2000, icon: 2 });
+                        },
+                        success: function (resp) {
+                            layer.closeAll('loading');
+                            resp = $.parseJSON(resp);
+                            //format_sql = resp.data.format_sql;
+                            //$("#text_id_sql").val(format_sql);
+                            if (resp.errno == 0) {
+                                //保存成功了，跳转
+                                layer.msg("保存成功", { time: 2000, icon: 1 }, function () {
+                                    window.location.href = '/sql_order/index';
+                                });
+                            } else {
+                                //保存失败
+                                layer.msg(resp.errmsg, { time: 2000, icon: 2 }, function () {
+                                });
+                            }
+                            $("#save_btn").attr('disabled', false);
+                        }
+                    });
+                    form.render();
+                    return false;
+                }
+            });
+            */
+        });
+    </script>
+</body>
+
+</html>

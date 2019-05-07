@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!--
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    -->
+    <link rel="stylesheet" type="text/css" href="../lou/css/multi-select.css">
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="page-header">权限</h3>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <!-- 页面结构 -->
+                                    <form action="/permission/commit" method="POST" onsubmit="return on_submit()" id="form_id" class="layui-form">
+                                        <input type="hidden" name="sel_ips" id="sel_ips">
+                                        <div class="form-group">
+                                            <label>部门</label>
+                                            <select id="sel_id_dept_id" name="dept_id" lay-search lay-filter="sel_f_dept_id" style='width:500px;'>
+                                                {% for dept in data.depart_list %}
+                                                <option value="{{dept.id}}">{{dept.en_name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </form>
+                                    <div class="form-group">
+                                        <select id='pre-selected-options' multiple='multiple' class="searchable">
+                                            {% for s in data.rest_server_list %}
+                                            <option value='{{s.id}}' ip='{{s.ip}}'>{{s.ip}} / {{s.remark}}</option>
+                                            {% endfor %} {% for s in data.has_select_list %}
+                                            <option value='{{s.id}}' selected ip='{{s.ip}}'>{{s.ip}} / {{s.remark}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="form-group">
+                                        <input type="submit" value="提交" id="commit_btn" onclick="submit_form()" class="btn btn-primary">
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!-- /.row (nested) -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /#page-wrapper -->
+
+        </div>
+        <script src="../vendor/jquery/jquery.min.js"></script>
+        <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../dist/js/sb-admin-2.js"></script>
+        <script src="../lou/js/jquery.multi-select.js"></script>
+        <script src="../lou/js/jquery.quicksearch.js"></script>
+        <script src="../vendor/layui/layui.js"></script>
+        <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+
+        <script type="text/javascript">
+            //$('#pre-selected-options').multiSelect();
+
+
+            $(document).ready(function () {
+                //$("#sel_id_dept_id").select2();
+                var dept_id = "{{data.dept_id}}";
+                if (dept_id != '') {
+                    $("#sel_id_dept_id").val(dept_id);
+                }
+
+                /*
+                $("#sel_id_dept_id").change(function () {
+                    var dept_id = $("#sel_id_dept_id").val();
+                    alert(dept_id);
+                    window.location.href = "/permission/index?dept_id=" + dept_id;
+                });*/
+
+                $('.searchable').multiSelect({
+                    selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='待授权' style='width:360px;'>",
+                    selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='已授权' style='width:360px;'>",
+                    afterInit: function (ms) {
+                        var that = this,
+                            $selectableSearch = that.$selectableUl.prev(),
+                            $selectionSearch = that.$selectionUl.prev(),
+                            selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                            selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                        that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                            .on('keydown', function (e) {
+                                if (e.which === 40) {
+                                    that.$selectableUl.focus();
+                                    return false;
+                                }
+                            });
+
+                        that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                            .on('keydown', function (e) {
+                                if (e.which == 40) {
+                                    that.$selectionUl.focus();
+                                    return false;
+                                }
+                            });
+                    },
+                    afterSelect: function () {
+                        this.qs1.cache();
+                        this.qs2.cache();
+                    },
+                    afterDeselect: function () {
+                        this.qs1.cache();
+                        this.qs2.cache();
+                    }
+                });
+
+
+                //for test
+                //$(".ms-elem-selection.ms-selected")
+                //$("select").each(function () {
+                    //$(this).css("width", ($(this).width() + 6) + "px");
+                    //$(this).css("height", "1000px");
+                    //alert('123');
+                //});
+            });
+
+            function submit_form() {
+                $("#form_id").submit();
+            };
+
+            function on_submit() {
+                var arrayObj = new Array();
+                $(".ms-elem-selection.ms-selected").each(function () {
+                    ip = $(this).attr("ip");
+                    //alert(ip);
+                    arrayObj.push(ip);
+                });
+                var sel_ips = arrayObj.join(',');
+                $("#sel_ips").val(sel_ips);
+                layui.use(['layer'], function () {
+                    $.ajax({
+                        url: '/permission/commit',
+                        type: 'POST',
+                        async: false,
+                        data: $('#form_id').serialize(),
+                        error: function (resp) {
+                            console.log(resp);
+                            $("#commit_btn").attr('disabled', false);
+                            layer.msg('发生错误', { time: 3000, icon: 2 });
+                        },
+                        success: function (resp) {
+                            $("#commit_btn").attr('disabled', false);
+                            layer.msg('修改成功', {
+                                time: 2000, icon: 1, function() {
+                                }
+                            });
+                        }
+                    });
+                });
+
+                return false;
+            };
+
+            layui.use(['form'], function () {
+                var form = layui.form;
+                var $ = jQuery = layui.jquery;
+
+                form.on('select(sel_f_dept_id)', function (data) {
+                    dept_id = data.value;
+                    window.location.href = "/permission/index?dept_id=" + dept_id;
+                });
+            });
+        </script>
+</body>
+
+</html>

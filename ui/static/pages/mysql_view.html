@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">服务器
+                    </h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+                            {{data.operate_zh}}
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form role="form" action="{{data.form}}" method="post" id="form_id">
+                                        <input type="hidden" name="id" value="{{data.row.id}}">
+                                        <input type="hidden" id="instance_count" name="instance_count" value="{{data.ins_num}}">
+                                        <input type="hidden" id="ports" name="ports" value="">
+                                        <input type="hidden" id="root_pwds" name="root_pwds" value="">
+                                        <input type="hidden" id="remote_users" name="remote_users" value="">
+                                        <input type="hidden" id="remote_pwds" name="remote_pwds" value="">
+                                        <input type="hidden" id="remarks" name="remarks" value="">
+
+                                        <div class="form-group">
+                                            <label>主机名</label>
+                                            <input name="hostname" class="form-control" placeholder="例:bjxg-业务类型-机柜号-位置.inter.xxx.com" value="{{data.row.hostname}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>IP</label>
+                                            <input class="form-control" name="ip" value="{{data.row.ip}}">
+                                        </div>
+                                        <!--
+                                        <div class="form-group">
+                                            <label>运营商</label>
+                                            <input class="form-control" name="isp" value="{{data.row.isp}}">
+                                        </div>
+                                        -->
+                                        <div class="form-group">
+                                            <label>备注</label>
+                                            <textarea class="form-control" rows="3" name="remark" placeholder="必填">{{data.row.remark}}</textarea>
+                                        </div>
+                                        <!--
+                                        <div class="form-group">
+                                                <label>mysql实例列表</label>
+                                                <textarea class="form-control" rows="3" name="remark">{{data.row.remark}}</textarea>
+                                        </div>
+                                        -->
+                                        <div class="form-group">
+                                            <label>MySQL实例:</label>
+                                        </div>
+                                        <!-- 动态增删元素 -->
+                                        <div class="addel">
+                                            <!--
+                                            <div>
+                                                <label>mysql实例：</label>
+                                            </div>
+                                            -->
+                                            <div>
+                                                <table border="1px" class="form-group">
+                                                    <tr>
+                                                        <th>
+                                                            <label class="control-label">端口</label>
+                                                        </th>
+                                                        <!--
+                                                        <th>
+                                                            <label class="control-label">root密码</label>
+                                                        </th>
+                                                        -->
+                                                        <th>
+                                                            <label class="control-label">远程执行用户</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="control-label">远程执行密码</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="control-label">备注</label>
+                                                        </th>
+                                                        <th>
+                                                            <label class="control-label">操作</label>
+                                                        </th>
+                                                    </tr>
+                                                    {% for ins in data.instances %}
+                                                    <tr class="form-group addel-target">
+                                                        <td>
+                                                            <input type="text" name="ports[]" class="form-control" value="{{ins.port}}">
+                                                        </td>
+                                                        <!--
+                                                        <td>
+                                                            <input type="text" name="root_pwds[]" class="form-control" value="{{ins.root_pwd}}">
+                                                        </td>
+                                                        -->
+                                                        <td>
+                                                            <input type="text" name="remote_users[]" class="form-control" value="{{ins.remote_user}}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="password" name="remote_pwds[]" class="form-control" value="{{ins.remote_pwd}}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="remarks[]" class="form-control" value="{{ins.remark}}">
+                                                        </td>
+                                                        <td>
+                                                            <span class="input-group-btn">
+                                                                <span class="input-group-btn">
+                                                                        <button type="button" class="btn btn-danger addel-delete">
+                                                                                移除
+                                                                        </button>
+                                                                </span>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="button" class="btn btn-success addel-add" value="添加实例">
+                                                <!--<button class="btn btn-success addel-add">添加mysql实例</button>-->
+                                                <br><br><br><br>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="button" class="btn btn-primary" value="&nbsp&nbsp提&nbsp&nbsp&nbsp&nbsp交&nbsp&nbsp" onclick="return confirm_submit()">
+                                            </div>
+                                        </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery/jquery.validate.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+
+    <script src="../vendor/layui/layui.js"></script>
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+    <script src="../vendor/addel/addel.jquery.js"></script>
+
+    <script>
+        jQuery().ready(function () {
+            //动态增删mysql实例
+
+            jQuery('.addel').addel({
+                events: {
+                    added: function (event) {
+                        var instance_count = Number(jQuery("#instance_count").val());
+                        jQuery("#instance_count").val((instance_count + 1).toString());
+                        console.log('Added ' + event.added.length);
+                        console.log("instance_count", jQuery("#instance_count").val());
+                    }
+                }
+            }).on('addel:delete', function (event) {
+                var instance_count = Number(jQuery("#instance_count").val());
+                if (instance_count == 1) {
+                    layui.use(['layer'], function () {
+                        var layer = layui.layer;
+                        layer.msg("至少添加一个实例")
+                    });
+                    return false;
+                }
+                if (!window.confirm('确定移除此实例吗? 端口:' + event.target.find(':input').val())) {
+                    console.log('Deletion prevented!');
+                    event.preventDefault();
+                } else {
+                    console.log("deleted");
+                    jQuery("#instance_count").val((instance_count - 1).toString());
+                    console.log("instance_count", jQuery("#instance_count").val());
+                }
+            });
+
+            /*
+            jQuery('.addel-container').addel({
+                // optional options object
+            });*/
+
+            //validate加trim
+            jQuery.validator.addMethod("trim", function (value, element) {
+                value = jQuery.trim(String(value));
+                if (value == "") {
+                    return false;
+                }
+                element.value = value;
+                return this.optional(element) || true;
+            }, "");
+
+            //ip验证
+            jQuery.validator.addMethod("ip", function (value, element) {
+                return this.optional(element) || /^(([1-9]|([1-9]\d)|(1\d\d)|(2([0-4]\d|5[0-5])))\.)(([1-9]|([1-9]\d)|(1\d\d)|(2([0-4]\d|5[0-5])))\.){2}([1-9]|([1-9]\d)|(1\d\d)|(2([0-4]\d|5[0-5])))$/.test(value);
+            }, "请填写正确的IP地址");
+
+            //表单验证
+            jQuery("#form_id").validate({
+                rules: {
+                    hostname: {
+                        required: true,
+                        trim: true
+                    },
+                    ip: {
+                        required: true,
+                        trim: true,
+                        ip: true
+                    },
+                    isp: {
+                        required: true,
+                        trim: true
+                    },
+                    remark: {
+                         required: true,
+                         trim: true
+                    }
+                },
+                messages: {
+                    hostname: "请填写主机名",
+                    ip: "请填写正确的IP地址",
+                    //isp: "请填写运营商"
+                }
+                /*
+                submitHandler: function (form) {
+                    
+                    
+                    if (confirm("确认提交？")) {
+                        jQuery.ajax({
+                            type : "POST",
+                            url : jQuery("#form_id").attr('action'),
+                            data: jQuery('#form_id').serialize(),
+                            async: false,
+                            error: function(resp) {
+                                console.log(resp);
+                            }, 
+                            success: function(resp) {
+                                resp = jQuery.parseJSON(resp);
+                                layui.use(['layer'], function(){
+                                    var layer = layui.layer
+                                    if (resp.errno == 0) {
+                                        layer.msg(
+                                            '提交成功',
+                                            {
+                                                time: 3000,
+                                                icon: 1,
+                                            },
+                                            function() {
+                                                console.log('function');
+                                                window.location.href = "/mysql/index";
+                                            }
+                                        );
+                                        
+                                    } else {
+                                        layer.msg(
+                                            resp.errmsg,
+                                            {
+                                                time: 3000,
+                                                icon: 2,
+                                            },
+                                            function() {
+                                                
+                                            }
+                                        );
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                }*/
+            });
+        });
+
+        //提交
+        function confirm_submit() {
+
+            //端口
+            var ports = "";
+            jQuery('input[name="ports[]"]').each(function(){
+                ports = ports + $(this).val() + ",";
+            });
+            //移除最后一个逗号
+            ports = ports.substr(0, ports.length - 1); 
+            jQuery("#ports").val(ports);
+            
+            //root密码
+            var root_pwds = "";
+            jQuery('input[name="root_pwds[]"]').each(function(){
+                root_pwds = root_pwds + $(this).val() + ",";
+            });
+            root_pwds = root_pwds.substr(0, root_pwds.length - 1); 
+            jQuery("#root_pwds").val(root_pwds);
+
+            //远程执行用户
+            var remote_users = "";
+            jQuery('input[name="remote_users[]"]').each(function(){
+                remote_users = remote_users + $(this).val() + ",";
+            });
+            remote_users = remote_users.substr(0, remote_users.length - 1);
+            jQuery("#remote_users").val(remote_users); 
+
+            //远程执行密码
+            var remote_pwds = "";
+            jQuery('input[name="remote_pwds[]"]').each(function(){
+                remote_pwds = remote_pwds + $(this).val() + ",";
+            });
+            remote_pwds = remote_pwds.substr(0, remote_pwds.length - 1);
+            jQuery("#remote_pwds").val(remote_pwds); 
+
+            //备注
+            var remarks = "";
+            jQuery('input[name="remarks[]"]').each(function(){
+                remarks = remarks + $(this).val() + ",";
+            });
+            remarks = remarks.substr(0, remarks.length - 1);
+            jQuery("#remarks").val(remarks); 
+
+            //if (confirm("确认提交？")) {
+                jQuery("input[type=submit]").attr('disabled',true);
+                jQuery.ajax({
+                    type: "POST",
+                    url: jQuery("#form_id").attr('action'),
+                    data: jQuery('#form_id').serialize(),
+                    async: false,
+                    error: function (resp) {
+                        console.log(resp);
+                    },
+                    success: function (resp) {
+                        resp = jQuery.parseJSON(resp);
+                        layui.use(['layer'], function () {
+                            var layer = layui.layer
+                            if (resp.errno == 0) {
+                                layer.msg(
+                                    '提交成功',
+                                    {
+                                        time: 3000,
+                                        icon: 1,
+                                    },
+                                    function () {
+                                        console.log('function');
+                                        window.location.href = "/mysql/index";
+                                    }
+                                );
+                            } else {
+                                layer.msg(
+                                    resp.errmsg,
+                                    {
+                                        time: 3000,
+                                        icon: 2,
+                                    },
+                                    function () {
+
+                                    }
+                                );
+                                jQuery("input[type=submit]").attr('disabled',false);
+                            }
+                        });
+                    }
+                });
+                return false;
+            //}
+            //return false;
+        };
+    </script>
+</body>
+</html>

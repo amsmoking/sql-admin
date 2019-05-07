@@ -1,0 +1,164 @@
+[settings]
+
+#用于调试，线上设为false
+DEBUG = true
+#是否同时输出日志到终端，线上设为false
+LOG_OUTPUT = true
+#监听端口
+PORT = 9014
+#NGINX端口
+NGX_PORT = 9010
+#日志文件
+LOG_FILE = /var/log/sql-admin/ui.log
+#poller调用接口时验证的token
+PULLER_TOKEN = puller_token_qazwsx_v1
+#标题
+HOME_TITLE = SQL-Admin
+#勾选变更的数据库时过滤掉的库，这里一般配置mysql自带的数据库
+FILTER_DB_NAME_LIST = information_schema,mysql,performance_schema
+#session过期时间
+SESSION_EXPIRE = 36000
+#session目录
+SESSION_PATH = /var/log/sql-admin/sessions1
+#邮件通知的发件人地址(未启用，目前通过jira通知)
+NOTIFY_FROM_ADDR = sre_mysql_help@xxx.com
+#sendmail服务到地址
+SEND_MAIL_SERVER = 127.0.0.1
+SEND_MAIL_PORT = 25
+#提交上线申请时是否进行sql检查, 若设为false, 则不检查，存在警告、错误也可以提交
+SQL_CHECK = true
+#提交申请时是否检查影响的行数，这个检查在前端检查，inception也有一个影响行数检查，这里默认不开启，通过inception去检查
+IS_CHECK_AFFECT_ROWS = false
+#提交申请时影响行数超过多少提示错误，在IS_CHECK_AFFECT_ROWS为true时生效
+AFFECT_ROWS_LIMIT = 20000
+
+###SQL异步执行相关
+#异步执行任务是否开启
+ASYNC_EXEC_SQL_TASK_ENABLE = true
+#影响的行数超过多少时异步执行
+ASYNC_AFFECT_ROWS_LIMIT = 20000
+#执行异步耗时sql的消费者的睡眠时间
+ASYNC_SQL_CONSUMER_EXEC_INTVAL = 20
+#异步执行sql消费者的日志
+ASYNC_SQL_EXEC_LOG = /var/log/sql-admin/async_sql_exec.log
+#当异步执行sql时，获取执行进度的时间间隔
+ASYNC_SQL_PROC_GET_INTVAL = 3
+
+#收集部门信息任务是否开启
+COLLECT_DEPART_TASK_ENABLE = true
+#收集部门信息任务查询ldap失败时的重试时间
+COLLECT_DEPART_TASK_SLEEP_INTVAL = 120
+
+###jira接口
+#是否发送jira通知
+JIRA_ENABLE = true
+#jira创建issue接口
+JIRA_ISSUE_URL = http://jira.xxx.com/rest/api/2/issue/
+#创建任务的project key，对应运维SRE
+JIRA_ISSUE_PROJECT_KEY = OP
+#类型这里设置为任务
+JIRA_ISSUE_TYPE = 任务
+#类别，mysql类问题
+JIRA_COMPONENTS = MySQL
+#jira issue状态更新为已解决的issue接口
+JIRA_RESLOVE_URL = http://jira.xxx.com/rest/api/2/issue/issueIdOrKey/transitions
+#jira issue状态更新为已解决的transtion id
+JIRA_RESLOVE_TRANS_ID = 5
+#创建评论接口
+JIRA_ADD_COMMENT_URL = http://jira.xxx.com/rest/api/2/issue/
+
+###ldap登录验证
+LDAP_SERVER = ldap://10.10.36.28:389
+LDAP_BIND = CN=readonly,CN=Users,DC=xxx,DC=com
+LDAP_PASS = xxxx
+
+####数据库
+DB_HOST = 192.168.64.22
+DB_PORT = 3306
+DB_USER = xdev
+DB_PWD = xdev
+DB_NAME = xsql
+
+####inception
+#inception地址
+INCEPTION_HOST = 192.168.64.22
+#inception端口
+INCEPTION_PORT = 9012
+
+#是否开启备份, 默认开启，若设为false, 则拼接的被inception执行的sql中会添加disable-remote-backup
+#如果希望回滚，该选项应该设为true, 否则inception不会保存回滚语句
+IS_BACKUP = true
+#备份库
+BACKUP_DB_HOST = 192.168.64.22
+BACKUP_DB_PORT = 3306
+BACKUP_DB_USER = xdev
+BACKUP_DB_PWD = xdev
+
+#北京星光proxy节点地址
+BJXG_PROXY_HOST = 127.0.0.1
+BJXG_PROXY_PORT = 9017
+
+PINGAN_PROXY_HOST = 127.0.0.1
+PINGAN_PROXY_PORT = 9018
+
+PINGAN_INCEPTION_HOST = 192.168.64.22
+PINGAN_INCEPTION_PORT = 9012
+
+#检查前、上线前是否检查当前执行用户具有super, process, replication slave权限
+IS_CHECK_PERMISSION = false
+
+#pt-online-schema-change 3.0.8
+
+#cron分析任务是否开启(用于执行归档任务, CRON_JUDGER_ENABLE, CRON_EXECUTOR_ENABLE关闭任何一个，归档任务都不会执行, 默认都开启)
+CRON_JUDGER_ENABLE = true
+CRON_JUDGER_LOG = /var/log/sql-admin/cron_judger.log
+#执行间隔
+CRON_JUDGER_INTVAL = 10
+#cron执行任务是否开启(用于执行归档任务)
+CRON_EXECUTOR_ENABLE = true
+CRON_EXECUTOR_LOG = /var/log/sql-admin/cron_executor.log
+MQ_ADDR = tcp://127.0.0.1:9039
+#备份的sql文件存储路径
+ARCHIVE_BACKUP_DIR = /var/log/sql-admin/archive_backup/
+
+#报警接口
+ALARM_URL = http://10.10.25.14:9038/alarm
+
+#是否检查导出权限，为true时,ALLOW_EXPORT_USERS生效
+IS_CHECK_ALL_PERMI = true
+
+#具有导出权限的用户
+ALLOW_EXPORT_USERS = xxx,xxx1,xxx2
+
+#在线查询统计显示最近多少天的查询
+ONLINE_QUERY_CAL_LATEST_DAYS = 30
+
+#索引统计的任务是否开启
+INDEX_CAL_TASK_ENABLE = false
+INDEX_CAL_INTVAL = 2
+INDEX_CAL_FILE = /var/log/sql-admin/index_cal.db
+
+#自动审核任务是否开启
+AUTO_VERIFY_TASK_ENABLE = true
+#轮询时间
+AUTO_VERIFY_CHECK_INTVAL = 10
+#token
+AUTO_VERIFY_TOKEN = auto_verify_token
+#接口
+AUTO_VERIFY_API = http://127.0.0.1:9014/sql_order/api_execute
+AUTO_VERIFY_DEFAULT_JIRA_USER = xxxx
+AUTO_VERIFY_DEFAULT_JIRA_PWD = pwd
+
+CONTAINERS_URL = http://rolling.xxxxx.com/containers
+
+SESSION_CLEAN_INTVAL = 10
+
+CHECK_DEFUNCT_TASK_ENABLE = true
+CHECK_DEFUNCT_INTVAL = 10
+#超过三个僵尸进程，就重启inception
+RESTART_INCEPTION_DEFUNCT_THRESHOLD = 3
+RESTART_INCEPTION_CMD = cd /data/deploy/sql-admin/inception && ./restart.sh
+
+SLOW_QUERY_URL = http://127.0.0.1:8081/slowquery/slowquery.php
+
+OPEN_PRIV_TO_GUEST = true

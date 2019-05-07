@@ -1,0 +1,31 @@
+[settings]
+
+#开启调试
+DEBUG = false
+#是否同时输出日志到终端
+LOG_OUTPUT = true
+#日志文件
+LOG_FILE = /var/log/sql-admin/puller.log
+
+#poller调用接口时验证的token
+PULLER_TOKEN = puller_token_qazwsx_v1
+
+API_URL = http://127.0.0.1:9010
+GET_MYSQL_SERVERS_URI = /api/get_mysql_servers
+GET_INS_BY_SERVER_ID_URI = /api/get_ins_by_server_id
+GET_DBS_BY_INS_ID_URI = /api/get_dbs_by_ins_id
+DEL_DBS_BY_INS_ID_URI = /api/del_dbs_by_ins_id
+ADD_DB_BY_INS_ID_URI = /api/add_db_by_ins_id
+UPDATE_PULLER_STATUS_URI = /api/update_puller_status
+
+#执行间隔
+SLEEP_INTVAL = 60
+
+#mysql连接超时
+CONNECT_TIMEOUT = 20
+
+#是否探测表
+IS_DETECT_TABLE = false
+
+#是否探测列
+IS_DETECT_COLUMN = false

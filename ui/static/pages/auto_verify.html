@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+    <link href="../vendor/bootstrap-switch/bootstrap-switch.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">
+                        自动审核
+                    </h3>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+                            
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div>
+                                    <form class="layui-form" action="" id="form_id">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">状态</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" name="enable" id="enable" {%if data.auto_verify.enable==1 %} checked="checked" {%endif%}>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">时间段</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input" id="time_range" class="layui-input" name="time_range" placeholder=" - " value="{{data.auto_verify.begin_time}} - {{data.auto_verify.end_time}}" style="width:200px;">
+                                                <label style="color:red">默认窗口时间，当实例的窗口时间不存在时，以此时间执行。若希望全天自动执行，可设置为00:00:00 - 00:00:00</label>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">通知</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" name="is_send_mail" title="发送邮件" id="is_send_mail" class="layui-input" {%if data.auto_verify.is_send_mail==1
+                                                    %} checked="checked" {%endif%}>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">接收人</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="tos" id="tos" class="layui-input" class="layui-input" value="{{data.auto_verify.tos}}" placeholder="自动执行后接收邮件通知的邮箱，多个用逗号分隔">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" id="commit_btn">提交</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery/jquery.validate.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+    <script src="../vendor/layui/layui.js"></script>
+    <script src="../vendor/addel/addel.jquery.js"></script>
+    <script src="../vendor/bootstrap-switch/bootstrap-switch.js"></script>
+    <script>
+        $("input:checkbox").bootstrapSwitch({
+            //size: "small"
+            onText: '启用',
+            offText: '禁用',
+            onColor: "success",
+            offColor: "info",
+        });
+
+        layui.use(['laydate'], function () {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#time_range'
+                , type: 'time'
+                , range: true
+            });
+        });
+
+        $("#commit_btn").click(function () {
+            params = {};
+            enable = $("#enable").prop('checked');
+            if (enable === false) {
+                enable = 0;
+            } else {
+                enable = 1;
+            }
+            is_send_mail = $("#is_send_mail").prop('checked');
+            if (is_send_mail === false) {
+                is_send_mail = 0;
+            } else {
+                is_send_mail = 1;
+            }
+            time_range = $("#time_range").val();
+            tos = $("#tos").val();
+            params['time_range'] = time_range;
+            params['enable'] = enable;
+            params['is_send_mail'] = is_send_mail;
+            params['tos'] = tos;
+
+            $.ajax({
+                url: '/auto_verify/update',
+                type: 'POST',
+                async: false,
+                data: params,
+                error: function (resp) {
+                    console.log(resp);
+                },
+                success: function (resp) {
+
+                    layui.use(['layer'], function () {
+                        layer = layui.layer;
+                        resp = $.parseJSON(resp);
+                        if (resp.errno == 0) {
+                            layer.msg("提交成功", { time: 2000, icon: 1 }, function () {
+                                window.location.href = '/auto_verify/index';
+                            });
+                        } else {
+                            layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                        }
+                    });
+
+                }
+            });
+            return false;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="css/dsSelect.css" type="text/css" rel="stylesheet"/>
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="js/dsSelect.js"></script>
+</head>
+<body>
+   </p>
+    <!--这一层div做限定，无需管-->
+    <div style="width:800px; margin: 0px auto">
+
+    <button onclick="leftValues()">获取左侧数据</button>
+    <button onclick="rightValues()">获取右侧数据</button>
+    <button onclick="disableButtons()">禁用按钮</button>
+    <button onclick="start()">启用按钮</button>
+        <!--正文-->
+        <div class="dsSelect" id="dsSelectTemp">
+
+        </div>
+    </div>
+    <p>
+    
+</body>
+</html>
+<script type="text/javascript">
+    let dsSelectObj = new dsSelect("dsSelectTemp");
+    dsSelectObj.multiSelect =true;
+    dsSelectObj.init();
+    let datas = [
+        {id:"1",name:"选项1"},
+        {id:"2",name:"选项2"},
+        {id:"3",name:"选项3"},
+        {id:"4",name:"选项4"},
+        {id:"5",name:"选项5"},
+        {id:"6",name:"选项6"},
+        {id:"7",name:"选项7"},
+        {id:"8",name:"选项8"},
+        {id:"9",name:"选项9"},
+        {id:"0",name:"选项0"},
+        {id:"10",name:"选项10"},
+        {id:"11",name:"选项11"},
+        {id:"12",name:"选项12"},
+        {id:"13",name:"选项13"},
+        {id:"14",name:"选项14"},
+        {id:"15",name:"选项15"},
+    ];
+    let datasR=[
+        {id:"16",name:"选项16"},
+        {id:"17",name:"选项17"},
+        {id:"18",name:"选项18"},
+        {id:"19",name:"选项19"},
+    ];
+    dsSelectObj.setLeftData(datas,"name");
+    dsSelectObj.setRightData(datasR,"name");
+
+    function leftValues(){
+        alert(JSON.stringify(dsSelectObj.getSelectLeftValus()));
+    }
+    function rightValues(){
+       alert(JSON.stringify(dsSelectObj.getSelectRightValus()));
+    }
+    function disableButtons(){
+        dsSelectObj.disableButtons();
+    }
+    function start(){
+        dsSelectObj.restartButtons();
+    }
+</script>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <!--
+    <link href="../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+    -->
+
+    <!-- DataTables Responsive CSS -->
+    <!--
+    <link href="../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+    -->
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+
+    <style type="text/css">
+        /*
+        td {
+            position: relative;
+            z-index: 2;
+        }
+
+        td:hover {
+            z-index: 3;
+            background: none;
+        }
+
+        td .tdtip {
+            display: none;
+        }
+
+        td:hover .tdtip {
+            display: block;
+            position: absolute;
+            top: 8px;
+            background-color: whitesmoke;
+            color: royalblue;
+            word-break: break-all;
+        }*/
+
+        #editor {
+            width: 98%;
+            height: 450px;
+            border: 1px solid #bbb;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">{{data.page_title}}</h>
+                </div>
+            </div>
+            <div class="row">
+                <form id="form_id" class="layui-form">
+                    <input type="hidden" id="sql" name="sql">
+                    <div class="col-lg-8">
+                        <div id="editor"></div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="layui-form-item">
+                            <label class="control-label">MySQL</label>
+                        </div>
+                        <div class="layui-form-item">
+                            <select name="server_id" lay-verify="required" lay-search id="server_id" lay-filter="server_id">
+                                <option value="">请选择</option>
+                                {%for server in data.mysql_server_list%}
+                                <option value="{{server.id}}">{{server.ip}}/{{server.remark}}</option>
+                                {%endfor%}
+                            </select>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="control-label">端口实例</label>
+                        </div>
+                        <div class="layui-form-item">
+                            <select name="ins_id" lay-verify="./required" lay-search id="ins_id" lay-filter="ins_id">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="control-label">库</label>
+                        </div>
+                        <div class="layui-form-item">
+                            <select name="ins_db_id" lay-verify="required" lay-search id="ins_db_id" lay-filter="ins_db_id">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="control-label">行数限制</label>
+                        </div>
+                        <div class="layui-form-item">
+                            <select name="limit_rows" lay-verify="required" lay-search id="limit_rows" lay-filter="limit_rows">
+                                <option value="100" selected>100</option>
+                                <option value="1000">1000</option>
+                                <option value="3000">3000</option>
+                            </select>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" lay-submit lay-filter="query" id="query" is_export="false">查询</button>
+                            <button class="layui-btn layui-btn-normal" id="format_sql" onclick="return format_sql_func()">美化</button>
+                            {% if data.show_export == 'true' %}
+                            <button class="layui-btn layui-btn-primary" lay-submit lay-filter="query" id="export" is_export="true">导出</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--
+                    <h5 class="page-header">查询结果</h>
+                    -->
+                    <div class="layui-tab">
+                        <ul class="layui-tab-title">
+                            <li>查询历史</li>
+                            <li>优化建议</li>
+                            <li class="layui-this" id="query_result" >查询结果</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item">
+                                <div style="overflow:scroll">
+                                    <table class="layui-table" id="query_history">
+                                        {%for his in data.query_history %}
+                                        <tr>
+                                            <td width="200">{{his.query_time}}</td>
+                                            <td>{{his.sql}}</td>
+                                        </tr>
+                                        {%endfor%}
+                                        <tr>
+                                            <td width="200"></td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div style="overflow:scroll">
+                                    <label>
+                                            <pre id="optmize"></pre>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item layui-show">
+                                <div style="overflow:scroll">
+                                    <table id="demo" lay-filter="demo" style="min-width:20000;"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--
+                <div class="col-lg-12">
+                    <h5 class="page-header">查询结果</h>
+                        <div style="overflow:scroll">
+                            <table id="demo" lay-filter="demo" style="min-width:20000;"></table>
+                        </div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+    <!--
+    <script src="../vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>
+    -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+    <script src="../vendor/layui/layui.js"></script>
+    <script src="../ace/ace.js" type="text/javascript"></script>
+    <script src="../ace/ext-language_tools.js"></script>
+    <script src="../ace/snippets/sql.js"></script>
+    <script src="../js/sql-formatter.min.js"></script>
+    <!--
+    <script src="../js/feedback.js"></script>
+    -->
+    <script type="text/javascript" src="../vendor/table-export/tableExport.js"></script>
+    <script type="text/javascript" src="../vendor/table-export/libs/FileSaver/FileSaver.min.js"></script>
+    <script type="text/javascript" src="../vendor/table-export/libs/js-xlsx/xlsx.core.min.js"></script>
+
+    <script>
+
+        function init_ace_editor() {
+            var editor = ace.edit('editor');
+            //设置主题
+            editor.setTheme("ace/theme/textmate");
+            //设置编辑语言
+            editor.getSession().setMode("ace/mode/sql");
+            //editor.setValue("#每次只执行第一条语句, 不需要写use [数据库];");
+            editor.setValue("");
+            editor.setFontSize(16);
+            //移动光标
+            editor.moveCursorTo(0, 0);
+            //与ctrl+f功能一致 
+            editor.execCommand('find');
+            //启用提示菜单
+            ace.require("ace/ext/language_tools");
+            editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true,
+                enableLiveAutocompletion: true
+            });
+            //自动换行,设置为off关闭
+            editor.setOption("wrap", "free");
+            editor.getSession().setUseWrapMode(true);
+            //绑定快捷键
+            editor.commands.addCommand({
+                name: "alter",
+                bindKey: { win: "Ctrl-Enter", mac: "Command-Enter" },
+                exec: function (editor) {
+                    alert(editor.getValue())
+                }
+            });
+            //设置自动提示代码
+            var setCompleteData = function (data) {
+                var langTools = ace.require("ace/ext/language_tools");
+                langTools.addCompleter({
+                    getCompletions: function (editor, session, pos, prefix, callback) {
+                        if (prefix.length === 0) {
+                            return callback(null, []);
+                        } else {
+                            return callback(null, data);
+                        }
+                    }
+                });
+            };
+        };
+
+        function refresh_ins() {
+            server_id = $("#server_id").val();
+            if (server_id == '') {
+                $("#ins_id").empty();
+                $("#ins_id").append("<option value=''>" + "请选择" + "</option>");
+            } else {
+                $.ajax({
+                    url: '/front/get_ins_by_server_id?server_id=' + server_id,
+                    type: 'POST',
+                    async: false,
+                    error: function (resp) {
+                        console.log(resp);
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        if (resp.errno == 0) {
+                            $("#ins_id").empty();
+                            rows = resp.data;
+                            $("#ins_id").append("<option value=''>" + "请选择" + "</option>");
+                            for (index in rows) {
+                                row = rows[index];
+                                $("#ins_id").append("<option value='" + row.id.toString() + "'>" + row.port.toString() + "</option>");
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        function format_sql_func() {
+            var editor = ace.edit('editor');
+            sql = editor.getValue();
+
+            layui.use(['layer'], function () {
+                layer.load();
+                sql = sqlFormatter.format(sql);
+                editor.setValue(sql);
+                layer.closeAll('loading');
+            });
+
+            return false;
+        };
+
+        function refresh_ins_db() {
+            ins_id = $("#ins_id").val();
+            if (ins_id == '') {
+                $("#ins_db_id").empty();
+                $("#ins_db_id").append("<option value=''>" + "请选择" + "</option>");
+            } else {
+                $.ajax({
+                    url: '/front/get_ins_db_by_ins_id?ins_id=' + ins_id,
+                    type: 'POST',
+                    async: false,
+                    error: function (resp) {
+                        console.log(resp);
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        //console.log(resp);
+                        if (resp.errno == 0) {
+                            rows = resp.data;
+                            $("#ins_db_id").empty();
+                            $("#ins_db_id").append("<option value=''>" + "请选择" + "</option>");
+                            for (index in rows) {
+                                row = rows[index];
+                                //console.log(row);
+                                $("#ins_db_id").append("<option value='" + row.id.toString() + "'>" + row.db_name.toString() + "</option>");
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        function query(sql, is_export) {
+
+            $("#sql").val(sql);
+            if (sql == '') {
+                return;
+            }
+
+            layui.use(['table', 'layer'], function () {
+                url = '/sql/online_query';
+                //查询
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    async: true,
+                    timeout: 10000,
+                    data: $("#form_id").serialize(),
+                    error: function (resp) {
+                        console.log(resp);
+                    },
+                    success: function (resp) {
+
+                        resp = $.parseJSON(resp);
+                        is_has_slave = resp.is_has_slave;
+                        //if (resp.errno == 0) {
+                        var table = layui.table;
+                        table.render({
+                            elem: '#demo', //指定原始表格元素选择器（推荐id选择器）
+                            //height: 500, //容器高度
+                            width: resp.width,
+                            //width: 6000,
+                            cellMinWidth: 150,
+                            page: true, //开启分页
+                            limit: 50, //每页显示的条数，默认10
+                            cols: resp.data.cols, //设置表头
+                            //cols : [[{"edit":"text","field":"counta","fixed":"left","sort":true,"title":"count1"}]],
+                            //data : [{"counta":5291283}],
+                            data: resp.data.rows,
+                            loading: true,
+                        });
+                        if (resp.errno == 0) {
+                            //添加历史查询记录
+                            add_query_history(sql);
+                            $("#optmize").text(resp.data.optmize);
+                        }
+                        //导出
+                        if (is_export == 'true') {
+                            $.ajax({
+                                url: '/sql/is_can_export',
+                                type: 'POST',
+                                async: true,
+                                timeout: 10000,
+                                data: $("#form_id").serialize(),
+                                error: function (resp) {
+                                    console.log(resp);
+                                },
+                                success: function (resp) {
+                                    resp = $.parseJSON(resp);
+                                    if (resp.errno == 0) {
+                                        window.location.href = '/sql/export?is_export=true&' + $("#form_id").serialize();
+                                    } else {
+                                        layui.use(['form', 'element', 'jquery', 'layer'], function () {
+                                            var layer = layui.layer;
+                                            layer.msg(resp.errmsg);
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                        if (is_has_slave === true) {
+                            //从库
+                            $("#query_result").text('查询结果（数据来源：从库）');
+                        } else if (is_has_slave === false) {
+                            //主库
+                            $("#query_result").text('查询结果（数据来源：主库）');
+                        } else {
+                            //查询异常
+                            $("#query_result").text('查询结果');
+                        }
+                    }
+                });
+            });
+
+            return false;
+        };
+
+        function current_time() {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            year = year.toString();
+            month = month.toString();
+            day = day.toString();
+            hour = hour.toString();
+            minute = minute.toString();
+            second = second.toString();
+            if (month.length == 1) {
+                month = '0' + month;
+            }
+            if (day.length == 1) {
+                day = '0' + day;
+            }
+            if (hour.length == 1) {
+                hour = '0' + hour;
+            }
+            if (minute.length == 1) {
+                minute = '0' + minute;
+            }
+            if (second.length == 1) {
+                second = '0' + second;
+            }
+            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+        }
+
+        function add_query_history(sql) {
+            if (sql == '') {
+                return;
+            }
+            $('#query_history tbody').prepend('<tr><td width="200">' + current_time() + '</td><td>' + sql + '</td></tr>');
+            $.ajax({
+                url: '/sql/add_query_history',
+                type: 'POST',
+                async: true,
+                timeout: 3000,
+                data: { "sql": sql },
+                error: function (resp) {
+                    console.log(resp);
+                },
+                success: function (resp) {
+                    console.log(resp);
+                }
+            });
+            console.log('add history')
+        };
+
+        $(document).ready(function () {
+            init_ace_editor();
+
+            layui.use(['form', 'element', 'jquery', 'layer'], function () {
+                var form = layui.form;
+                var $ = jQuery = layui.jquery;
+                var layer = layui.layer;
+                var element = layui.element;
+
+                form.on('select(server_id)', function (data) {
+                    refresh_ins();
+                    form.render('select');
+                });
+
+                form.on('select(ins_id)', function (data) {
+                    refresh_ins_db();
+                    form.render('select');
+                });
+
+                form.on('submit(query)', function (data) {
+                    ele = data['elem'];
+                    is_export = $(ele).attr('is_export');
+                    var editor = ace.edit('editor');
+                    sql = editor.getValue();
+                    if (sql == '') {
+                        return false;
+                    }
+                    $("#query").attr("disable", true);
+                    $("#export").attr("disable", true);
+                    //layer.load();
+
+                    proc_text = '查询中';
+                    if (is_export == 'true') {
+                        proc_text = '导出中';
+                    }
+
+                    layer.msg(proc_text, {
+                        icon: 16
+                        , shade: 0.01
+                    });
+                    query(sql, is_export);
+                    $("#query").attr("disable", false);
+                    $("#export").attr("disable", false);
+                    layer.closeAll('loading');
+                    return false;
+                });
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!--
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+    -->
+    
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--
+    <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!--
+    <link href="../css/bootstrap-switch.css">
+    -->
+
+    <!--<link href="https://cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.css" rel="stylesheet">-->
+    <link href="../vendor/bootstrap/css/bootstrap-switch.css" rel="stylesheet">
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <h3 class="page-header">规则</h3>
+
+                    <form class="layui-form" action="#" method="post" id="form_id">
+                        <table lay-filter="parse-table-demo">
+                            <thead>
+                                <tr>
+                                    <th>选项</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vari in data.variables %}
+                                <tr>
+                                    <td>{{vari.zh_name}}</td>
+                                    <td>
+                                        <input type="checkbox" name="{{vari.Variable_name}}" {% if vari.Value == 'ON' %}checked{% endif %} />
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div class="form-group">
+                            <input type="button" class="btn btn-primary" value="提交" onclick="return submit_func()" id="commit_btn"> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            <!--<input type="button" class="btn btn-primary" value="重置" onclick="return confirm_reset()" id="reset_btn">-->
+                        </div>
+                    </form>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+    <script src="../dist/js/sb-admin-2.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.js"></script>
+    <script src="../vendor/layui/layui.js"></script>
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    <script type="text/javascript">
+        $("input:checkbox").bootstrapSwitch({
+            size: "small"
+        });
+
+        function submit_func() {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                layer.load();
+                $("#commit_btn").attr('disabled', true);
+                $.ajax({
+                    url: '/inception/update_config',
+                    type: 'POST',
+                    async: true,
+                    data: $('#form_id').serialize(),
+                    error: function (resp) {
+                        layer.closeAll('loading');
+                        console.log(resp);
+                        $("#commit_btn").attr('disabled', false);
+                        layer.msg(resp, { time: 3000, icon: 2 });
+                    },
+                    success: function (resp) {
+                        layer.closeAll('loading');
+                        resp = $.parseJSON(resp);
+                        if (resp.errno == 0) {
+                            //更新成功了，跳转
+                            layer.msg("修改成功", { time: 3000, icon: 1 }, function () {
+                                window.location.href = '/inception/config_index';
+                            });
+                        } else {
+                            //更新失败
+                            layer.msg(resp.errmsg, { time: 3000, icon: 2 }, function () {
+                            });
+                        }
+                        //$("#commit_btn").attr('disabled', false);
+                    }
+                });
+            });
+
+            return false;
+        };
+    </script>
+
+</body>
+
+</html>

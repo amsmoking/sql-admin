@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                    </h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            工单ID:{{data.order.id}} <font id="exec_status">正在获取进度...</font><br><br>
+                            IP: {{data.order.sel_ip}}<br><br>
+                            端口: {{data.order.sel_port}}<br><br>
+                            库名: {{data.order.sel_db_name}}
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="row">
+                                <div>
+                                    <br>
+                                </div>
+                                <div class="layui-progress" lay-showpercent="true" lay-filter="demo" id="id_demo">
+                                    <div class="layui-progress-bar" lay-percent="0%"></div>
+                                </div>
+                                <div>
+                                    <textarea id="progress_text" rows="30" cols="100" placeholder="获取进度中..." class="layui-textarea" name="sql" id="progress_text" disabled></textarea>
+                                </div>
+                                <div class="col-lg-6">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.js"></script>
+    <script src="../vendor/jquery/jquery.validate.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+
+    <script src="../vendor/layui/layui.js"></script>
+    <script src="../vendor/addel/addel.jquery.js"></script>
+
+    <script src="../vendor/layui/layui.js"></script>
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            layui.use('element', function () {
+                var $ = layui.jquery, element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+                var order_id = '{{data.order.id}}';
+                var req_intval = '{{data.async_process_show_intval}}';
+                req_intval = Number(req_intval) * 1000;
+                setInterval(function () {
+                    $.ajax({
+                        url: '/sql_order/get_process?order_id=' + order_id,
+                        type: 'POST',
+                        async: true,
+                        error: function (resp) {
+                            console.log(resp);
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            if (resp.errno == 0) {
+                                //成功获取到后端的进度
+                                process_text = resp.data.process_text;
+                                percent = resp.data.percent;
+                                exec_status = resp.data.exec_status;
+                                if (percent == 'no show') {
+                                    $("#id_demo").hide();
+                                }
+                                $("#progress_text").val(process_text);
+                                element.progress('demo', percent);
+                                $("#exec_status").text(exec_status);
+                            } else {
+                                //出错了
+                                console.log(resp);
+                            }
+                        }
+                    });
+                }, req_intval);
+            });
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{data.home_title}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        td {
+            position: relative;
+            z-index: 2;
+        }
+
+        td:hover {
+            z-index: 3;
+            background: none;
+        }
+
+        td .tdtip {
+            display: none;
+        }
+
+        td:hover .tdtip {
+            display: block;
+            position: absolute;
+            top: 8px;
+            background-color: whitesmoke;
+            color: royalblue;
+            word-break: break-all;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'navi.html' %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">{{data.page_title}}</h>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="/archive/new_task" class="layui-btn layui-btn-normal layui-btn-sm"> 添加 </a>
+                        </div>
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th lay-data="{field:'id'}">ID</th>
+                                        <th lay-data="{field:'req_user'}">创建人</th>
+                                        <!--
+                                        <th lay-data="{field:'remark'}">备注</th>
+                                        -->
+                                        <th lay-data="{field:'src_mysql'}">源</th>
+                                        <th lay-data="{field:'dst_mysql'}">目的</th>
+                                        <th lay-data="{field:'to_archive_tables'}">归档表</th>
+                                        <th lay-data="{field:'cron'}">cron</th>
+                                        <th lay-data="{field:'remark'}">备注</th>
+                                        <th lay-data="{field:'where'}">where</th>
+                                        <th lay-data="{field:'other'}">其他</th>
+                                        <!--
+                                        <th lay-data="{field:'latest_exec_time'}">最近执行时间</th>
+                                        -->
+                                        <th lay-data="{field:'oper'}">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in data.tasks %}
+                                    <tr class="odd gradeX">
+
+                                        <td>{{row.id}}</td>
+
+                                        <td>{{row.req_user}}</td>
+                                        <!--
+                                        <td>{{row.remark_jd}}
+
+                                            <span class="tdtip">{{row.remark}}</span>
+                                        </td>
+                                        -->
+                                        <td>{{row.src_mysql_jd}}
+                                            <span class="tdtip">{{row.src_mysql}}</span>
+                                        </td>
+                                        <td>{{row.dst_mysql_jd}}
+                                            <span class="tdtip">{{row.dst_mysql}}</span>
+                                        </td>
+                                        <td>
+                                            {{row.to_archive_tables}}
+                                        </td>
+                                        <td>{{row.cron}}</td>
+
+                                        <td>{{row.remark_jd}}
+
+                                            <span class="tdtip">{{row.remark}}</span>
+
+                                        </td>
+                                       
+                                        <td>
+                                            {{row.where}}
+                                        </td>
+                                        <td>
+                                            {{row.other}}
+                                        </td>
+                                        <!--
+                                        <td>{{row.is_delete}}</td>
+                                        <td>{{row.is_backup}}</td>
+                                        -->
+
+                                        <!--
+                                        <td>{{row.latest_exec_time}}</td>
+                                        -->
+
+
+                                        <td>
+
+                                            <table>
+
+                                                <tr>
+                                                    <!--
+                                                    <td>
+                                                        &nbsp;&nbsp;
+                                                        <a href='/archive/view?form=edit&task_id={{row.id}}' class="layui-btn layui-btn-primary layui-btn-sm">编辑</a>
+                                                    </td>
+                                                    -->
+                                                    <td>
+                                                        &nbsp;&nbsp;
+                                                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="return confirm_delete('{{row.id}}')">删除</a>
+                                                    </td>
+                                                    <td>
+                                                        &nbsp;&nbsp;
+                                                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="return start_now('{{row.id}}')">执行</a>
+                                                    </td>
+                                                    <td>
+                                                        &nbsp;&nbsp;
+                                                        <a href='/archive/log_index?task_id={{row.id}}' class="layui-btn layui-btn-primary layui-btn-sm">日志</a>
+                                                    </td>
+                                                    <td>
+                                                        &nbsp;&nbsp;
+                                                        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="return reverse_status('{{row.id}}', '{{row.status}}')">{{row.status_zh}}</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">SQL</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <pre id="sql_pre"></pre>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="cancel_modal" style="display:none">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="cancel_modal_label"></h4>
+                </div>
+                <div class="modal-body">
+                    <textarea class="layui-textarea" id="cancel_text" placeholder="填写取消原因"></textarea>
+                    <input type="hidden" id="cancel_order_id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="exec_cancel()">提交</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+    <script src="../vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="../dist/js/sb-admin-2.js"></script>
+    <script src="../vendor/layui/layui.js"></script>
+    <link href="../vendor/layui/css/layui.css" rel="stylesheet">
+    <script>
+
+        $(document).ready(function () {
+            $('#dataTables-example').DataTable({
+                responsive: true,
+                order: [[0, "desc"]],
+
+                language: {
+                    "sProcessing": "处理中...",
+                    "sLengthMenu": "显示 _MENU_ 项结果",
+                    "sZeroRecords": "没有匹配结果",
+                    "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                    "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                    "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                    "sInfoPostFix": "",
+                    "sSearch": "搜索:", "sUrl": "",
+                    "sEmptyTable": "表中数据为空",
+                    "sLoadingRecords": "载入中...",
+                    "sInfoThousands": ",",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上页",
+                        "sNext": "下页",
+                        "sLast": "末页"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": 以升序排列此列",
+                        "sSortDescending": ": 以降序排列此列"
+                    },
+                },
+            });
+        });
+
+        function exec_cancel() {
+            layui.use(['layer'], function () {
+                order_id = $("#cancel_order_id").val();
+                reason = $("#cancel_text").val();
+                $.ajax({
+                    url: '/sql_order/cancel',
+                    data: { 'id': order_id, 'reason': reason },
+                    type: 'POST',
+                    async: true,
+                    error: function (resp) {
+                        layer.close(index);
+                        alert("操作失败:" + resp);
+                    },
+                    success: function (resp) {
+                        resp = $.parseJSON(resp);
+                        if (resp.errno == 0) {
+                            layer.msg('已取消', { time: 2000, icon: 1 });
+                            setInterval(function () {
+                                window.location.reload()
+                            }, 1000);
+                        } else {
+                            layer.msg('操作失败:' + resp.errmsg, { time: 2000, icon: 1 });
+                        }
+                        layer.close(index);
+                    }
+                });
+                $("#cancel_modal").modal('hide');
+            });
+        };
+
+        function confirm_delete(id) {
+            if (confirm("确认删除吗？")) {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    $.ajax({
+                        url: '/archive/delete_task?task_id=' + id,
+                        type: 'POST',
+                        async: true,
+                        error: function (resp) {
+                            alert("删除失败:" + resp);
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            if (resp.errno == 0) {
+                                layer.msg('删除成功', { time: 2000, icon: 1 });
+                                setInterval(function () {
+                                    window.location.reload()
+                                }, 2000);
+                            } else {
+                                layer.msg('删除失败:' + resp.errmsg, { time: 2000, icon: 1 });
+                            }
+                        }
+                    });
+                });
+            }
+            return false;
+        };
+
+        function reverse_status(id, status) {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                $.ajax({
+                    url: '/api/reverse_archive_task_status?task_id=' + id,
+                    type: 'POST',
+                    async: false,
+                    error: function (resp) {
+                        alert("操作失败:" + resp);
+                    },
+                    success: function (resp) {
+                        msg = '';
+                        if (status == 0) {
+                            msg = '已启用';
+                        } else {
+                            msg = '已禁用';
+                        }
+                        resp = $.parseJSON(resp);
+                        if (resp.errno == 0) {
+                            layer.msg(msg, { time: 2000, icon: 1 });
+                            setInterval(function () {
+                                window.location.reload()
+                            }, 2000);
+                        } else {
+                            layer.msg('操作失败:' + resp.errmsg, { time: 2000, icon: 1 });
+                        }
+                    }
+                });
+            });
+            return false;
+        };
+
+
+
+        /*
+        function reverse_status(id, status) {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                $.ajax({
+                    url: '/archive/reverse_status?task_id=' + id,
+                    type: 'POST',
+                    async: true,
+                    error: function (resp) {
+                        alert("操作失败:" + resp);
+                    },
+                    success: function (resp) {
+                        msg = '';
+                        if (status == 0) {
+                            msg = '已启用';
+                        } else {
+                            msg = '已禁用';
+                        }
+                        resp = $.parseJSON(resp);
+                        if (resp.errno == 0) {
+                            layer.msg(msg, { time: 2000, icon: 1 });
+                            setInterval(function () {
+                                window.location.reload()
+                            }, 2000);
+                        } else {
+                            layer.msg('操作失败:' + resp.errmsg, { time: 2000, icon: 1 });
+                        }
+                    }
+                });
+            });
+            return false;
+        };
+        */
+
+        function start_now(task_id) {
+            if (confirm("立即执行吗？")) {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    $.ajax({
+                        url: '/archive/start_now?task_id=' + task_id,
+                        type: 'POST',
+                        async: true,
+                        error: function (resp) {
+                            alert("操作失败:" + resp);
+                        },
+                        success: function (resp) {
+                            resp = $.parseJSON(resp);
+                            if (resp.errno == 0) {
+                                layer.msg('已在后台开始执行', { time: 2000, icon: 1 });
+                            } else {
+                                layer.msg(resp.errmsg, { time: 2000, icon: 2 });
+                            }
+                        }
+                    });
+                });
+            }
+            return false;
+        };
+
+    </script>
+
+</body>
+
+</html>

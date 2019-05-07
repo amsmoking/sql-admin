@@ -1,0 +1,3 @@
+agileutil==12.34
+demjson==2.2.4
+python-decouple==3.1
